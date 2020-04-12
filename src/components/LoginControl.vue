@@ -29,6 +29,16 @@
 			FormRegistration
 		},
 
+		props: {
+			state: Number,
+		},
+
+		watch: {
+			state: function() {
+				this.openPage(this.state);
+			},
+		},
+
 		data() {
 			return {
 				showPage: 0,	// 1 - login, 2 - reset pass, 3 - reg
@@ -38,6 +48,7 @@
 		methods: {
 			openPage(state) {
 				this.showPage = state;
+				if (state === 0) this.$emit('close', 0);
 			},
 		},
 	}	

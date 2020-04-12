@@ -1,7 +1,13 @@
 <template>
 	<div class="showFotoRecipes">
-		<ShowCategory ref='listCategories' />
-		<input type="checkbox"><label>Только диетическое</label>
+		<div class="MenuFotoRecipes">
+			<div class="menuItem">
+				<ShowCategory ref='listCategories' :showAddBtn="true" />
+			</div>
+			<div class="menuItem">
+				<input type="checkbox"><label>Только диетическое</label>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -21,3 +27,24 @@
 
 	}
 </script>
+
+<style scoped>
+	.showFotoRecipes {
+		text-align: left;
+	}
+
+	.MenuFotoRecipes {
+		display: flex;
+	}
+
+	.menuItem {
+		display: inline-flex;
+	}
+
+@media (min-width: 100px) and (max-width: 320px) {
+	.MenuFotoRecipes {
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+}
+</style>

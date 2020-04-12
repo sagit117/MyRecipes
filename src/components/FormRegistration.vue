@@ -7,7 +7,8 @@
 							v-model="login"
 							@input="inputLogin"
 							:class="{ isErr: errorType.name }"
-							@keyup.enter="send">
+							@keyup.enter="send"
+							placeholder="Введите логин">
 		</div>
 		<div class="field">
 			<label>Пароль: </label>
@@ -15,7 +16,8 @@
 							v-model="pass"
 							@input="inputPass"
 							:class="{ isErr: errorType.pass }"
-							@keyup.enter="send">
+							@keyup.enter="send"
+							placeholder="Введите пароль">
 		</div>
 		<div class="field">
 			<label>Подтверждение: </label>
@@ -23,7 +25,8 @@
 							v-model="confirmPass"
 							@input="inputPass"
 							@keyup.enter="send"
-							:class="{ isErr: this.errorType.confirmPass }">
+							:class="{ isErr: this.errorType.confirmPass }"
+							placeholder="Введите подтверждение">
 		</div>
 		<div class="field">
 			<label>Проверочный код: </label>
@@ -34,7 +37,8 @@
 				<input 	type="text"
 								v-model="userCode"
 								@keyup.enter="send"
-								:class="{ isErr: this.errorType.code }">
+								:class="{ isErr: this.errorType.code }"
+								placeholder="Введите код">
 			</div>
 		<p><span class="error">{{ (errorText !== '') ? errorText : textError }}</span></p>
 		<div id="btn">

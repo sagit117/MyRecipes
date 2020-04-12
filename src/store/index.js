@@ -27,10 +27,12 @@ export default new Vuex.Store({
       datereg: '',
       rule: '',
     },
+    // категории рецептов
+    categoriesRecipes: '',                      // JSON категории рецептов по родителю, автору 
   },
 
   mutations: {
-    setShowWait(state, data) {
+    setShowWait(state, data) { // показ ожидания
       state.showWait = data;
     },
     setShowAlert(state, data) { // показать окно сообщений
@@ -62,7 +64,10 @@ export default new Vuex.Store({
       state.user.name = data.name;
       state.user.surname = data.surname;
       state.user.patronymic = data.patronymic;
-    }
+    },
+    setCategoriesRecipes(state, data) { // установка категорий рецептов
+      state.categoriesRecipes = data;
+    },
   },
 
   actions: {
@@ -269,6 +274,23 @@ export default new Vuex.Store({
         });
       });
     },
+    async loadCategoriesRecipes(context, data) { // загрузка категорий
+      context.commit("setShowWait", true);
+
+      axios.get(this.state.domainName + 'api/getCategoriesRecipe.php?parent_id=' + data.parent_id + "&author_id=" + data.author_id)
+      .then(function (response) {
+        // успешно
+        context.commit("setShowWait", false);
+        context.commit('setCategoriesRecipes', response.data);
+      })
+      .catch(function (error) {
+        // Проблемы на линии
+        console.log(error);
+        let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
+        context.commit('setShowAlert', alert);
+        context.commit("setShowWait", false);
+      });
+    },
   },
 
   getters: {
@@ -280,7 +302,10 @@ export default new Vuex.Store({
     },
     getUser: state => {
       return state.user;
-    }
+    },
+    getCategoriesRecipe: state => {
+      return state.categoriesRecipes;
+    },
   },
 
 

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="topPanel">
-      <LoginControl />
+      <LoginControl :state="showLoginState" @close="(state)=>{ this.showLoginState = state }"/>
     </div>
 
     <div class="panelMenu">
@@ -9,7 +9,7 @@
         <router-link to="/"><div class="home_black" title="Домой"><img src="ico/home.png"></div></router-link>
       </div>
       <div class="itemMenu">
-        <router-link to="/myrecipes">Мои рецепты</router-link>
+        <a href="#" @click.prevent="openMyRecipes">Мои рецепты</a>
       </div>
     </div>
 
@@ -46,6 +46,7 @@
     data() {
       return {
         visibleUpScroll: false,
+        showLoginState: 0,
       }
     },
 
@@ -65,6 +66,13 @@
         let matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([.$?*|{}()[\]\\/+^])/g, '\\$1') + "=([^;]*)"));
         return matches ? decodeURIComponent(matches[1]) : undefined;
       },
+      openMyRecipes() { // проверяет можно ли открыть мои рецепты, да - если залогинен, нет - показать форму логина
+        if (this.$router.history.current.path === '/myrecipes') {
+          return;
+        } else {
+          (this.$store.getters.getUser.id > 0) ? this.$router.push('/myrecipes') : this.showLoginState = 1;
+        }
+      }
     },
 
     destroyed: function () {
@@ -180,6 +188,15 @@
   }
   a:hover {
     color: #42b983;
+  }
+
+  select {
+    font-size: 16px;
+    height: 30px;
+    cursor: pointer;  
+    outline: 0;
+    color: white;
+    background-color: #42b983;   
   }
 
   .itemMenu > a.router-link-exact-active, .itemMenu > a.router-link-active {

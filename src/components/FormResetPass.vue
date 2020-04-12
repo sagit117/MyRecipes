@@ -7,7 +7,8 @@
 							v-model="login"
 							@input="inputLogin"
 							:class="{ isErr: errorText !== '' }"
-							@keyup.enter="sendData">
+							@keyup.enter="sendData"
+							placeholder="Введите адрес e-mail">
 		</div>
 		<p class="error"><span>{{ errorText }}</span></p>
 		<div id="btn">

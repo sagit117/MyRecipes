@@ -15,7 +15,8 @@
 								v-model="name"
 								@input="inputName"
 								:class="{ isErr: errorType.name }"
-								@keyup.enter="saveData">
+								@keyup.enter="saveData"
+								placeholder="Введите имя">
 			</div>
 			<div class="field">
 				<label>Фамилия:</label>
@@ -23,7 +24,8 @@
 								v-model="surname"
 								@input="inputSurname"
 								:class="{ isErr: errorType.surname }"
-								@keyup.enter="saveData">
+								@keyup.enter="saveData"
+								placeholder="Введите фамилию">
 			</div>
 			<div class="field">
 				<label>Отчество:</label>
@@ -31,7 +33,8 @@
 								v-model="patronymic"
 								@input="inputPatronymic"
 								:class="{ isErr: errorType.patronymic }"
-								@keyup.enter="saveData">
+								@keyup.enter="saveData"
+								placeholder="Введите отчество">
 			</div>
 			<button @click="saveData">Сохранить</button>
 
@@ -46,7 +49,8 @@
 				<input 	type="password"
 								v-model="oldPass"
 								@keyup.enter="changePass"
-								@input="inputPass">
+								@input="inputPass"
+								placeholder="Введите старый пароль">
 			</div>
 			<div class="field wrap">
 				<label>Новый пароль:</label>
@@ -54,7 +58,8 @@
 								v-model="newPass"
 								@keyup.enter="changePass"
 								@input="inputPass"
-								:class="{ isErr: errorType.newPass }">
+								:class="{ isErr: errorType.newPass }"
+								placeholder="Введите новый пароль">
 			</div>
 			<div class="field wrap">
 				<label>Подтверждение пароля:</label>
@@ -62,7 +67,8 @@
 								v-model="confirmPass"
 								@keyup.enter="changePass"
 								@input="inputPass"
-								:class="{ isErr: errorType.confirmPass }">
+								:class="{ isErr: errorType.confirmPass }"
+								placeholder="Введите подтверждение">
 			</div>
 			<button @click="changePass">Сменить пароль</button>
 		</div>

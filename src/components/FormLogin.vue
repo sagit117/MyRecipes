@@ -8,14 +8,16 @@
 							v-model="login"
 							@input="inputLogin"
 							:class="{ isErr: errorText !== '' }"
-							@keyup.enter="sendData">
+							@keyup.enter="sendData"
+							placeholder="Введите логин">
 		</div>
 		<div class="field">
 			<label>Пароль: </label>
 			<input 	type="password"
 							v-model="pass"
 							@input="inputPass"
-							@keyup.enter="sendData">
+							@keyup.enter="sendData"
+							placeholder="Введите пароль">
 		</div>
 
 		<div id="href">
@@ -41,6 +43,7 @@
 	// sagit117@gmail.com
 	
 	export default {
+
 		data() {
 			return {
 				login: '',
@@ -48,6 +51,7 @@
 				errorText: '',
 			}
 		},
+
 		methods: {
 			inputPass() {
 				if (this.login.length > 32) this.login = this.login.slice(0, 32);
