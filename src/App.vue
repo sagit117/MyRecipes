@@ -4,6 +4,15 @@
       <LoginControl />
     </div>
 
+    <div class="panelMenu">
+      <div class="itemMenu">
+        <router-link to="/"><div class="home_black" title="Домой"><img src="ico/home.png"></div></router-link>
+      </div>
+      <div class="itemMenu">
+        <router-link to="/myrecipes">Мои рецепты</router-link>
+      </div>
+    </div>
+
     <router-view></router-view>
 
     <Wait v-if="this.$store.getters.getShowWait" />
@@ -94,6 +103,44 @@
     cursor: pointer;
   }
 
+  .panelMenu {
+    display: flex;
+    height: 100px;
+    background-color: #41444a;
+  }
+
+  .itemMenu {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 15px;
+  } 
+  .itemMenu > a{
+    color: white;
+  }
+
+  .home_black {
+    display: block;
+    height: 60px;
+    width: 60px;
+    margin: auto;
+    border-radius: 50%;
+    box-shadow: 1px 1px 3px black;
+    cursor: pointer;
+    background-size: cover;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .home_black:active {
+    box-shadow: none;
+  }
+  .home_black > img {
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
   button {
     border-radius: 5px;
     box-shadow: 2px 2px 6px #000;
@@ -134,4 +181,9 @@
   a:hover {
     color: #42b983;
   }
+
+  .itemMenu > a.router-link-exact-active, .itemMenu > a.router-link-active {
+    color: white;
+  }
+
 </style>

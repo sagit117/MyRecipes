@@ -14,6 +14,11 @@ Vue.use(VueRouter)
     path: '/account',
     name: 'Account',
     component: () => import('../views/Account.vue')
+  },
+  {
+    path: '/myrecipes',
+    name: 'Myrecipes',
+    component: () => import('../views/MyRecipes.vue')
   }
 ]
 
