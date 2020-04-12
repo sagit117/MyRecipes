@@ -21,7 +21,7 @@
 	$res = new Response;
 
   if (isset($_GET['user'])) {
-    // смена пароля по get
+    // смена пароля по get (запрос через форму забыли пароль)
     $res->post = $_GET['user'];
     $usr = getUser("post", $res->post);
 
@@ -49,24 +49,26 @@
     echo json_encode($res);
   }
 
-    /*if (intval($_POST['user_id']) > 0) {
-        $id = intval($_POST['user_id']);
-        $oldPass = md5(md5($_POST['oldPass']));
-        $newPass = md5(md5($_POST['newPass']));
+  if (intval($_POST['user_id']) > 0) {
+    // смена пароля из личного кабинета (можно добавить проверку пользователя но вроде излишне)
+    $id = intval($_POST['user_id']);
+    $oldPass = md5(md5($_POST['oldPass']));
+    $newPass = md5(md5($_POST['newPass']));
 
-        $pass = getUser("id", $id)[0]->pass;
-        if ($oldPass == $pass) {
-            if (!updateUser("password", $newPass, "id", $id)) {
-                $res->errorCode = 2;
-                $res->errorText = "Не удалось изменить пароль!";
-            }
-            echo json_encode($res);
-        } else {
-            $res->errorCode = 1;
-            $res->errorText = "Старый пароль не совпадает!";
+    $pass = getUser("id", $id)[0]->pass;
+    
+    if ($oldPass == $pass) {
+      if (!updateUser("password", $newPass, "id", $id)) {
+        $res->errorCode = 2;
+        $res->errorText = "Не удалось изменить пароль!";
+      }
+      echo json_encode($res);
+    } else {
+      $res->errorCode = 1;
+      $res->errorText = "Старый пароль не совпадает!";
 
-            echo json_encode($res);
-        }
-    }*/
+      echo json_encode($res);
+    }
+  }
 
 ?>

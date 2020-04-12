@@ -196,7 +196,7 @@ export default new Vuex.Store({
         // залогинен
         context.commit("setShowWait", false); // выключаем компонент ожидания
         // если пользователь получен меням данные 
-        if (response === null) return;
+        if (response.data === null) return;
         if (parseInt(response.data.id) > 0) context.commit('setUserData', response.data);
         console.log('loginedUserHash');
       })
@@ -237,6 +237,36 @@ export default new Vuex.Store({
         let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
         context.commit('setShowAlert', alert);
         context.commit("setShowWait", false);
+      });
+    },
+    async changePassAccount(context, userData) {
+      // change pass
+      return new Promise((resolve, reject) => {let formData = new FormData();
+        formData.append("newPass", userData.newPass);
+        formData.append("oldPass", userData.oldPass);
+        formData.append("user_id", userData.id);
+
+        context.commit("setShowWait", true);
+
+        axios.post(this.state.domainName + 'api/changePass.php', formData)
+        .then(function (response) {
+          // Сохранено
+          context.commit("setShowWait", false);
+
+          if (response.data.errorCode == 0) {
+            let alert = {show: true, caption: "Успешно", text: "Данные сохранены.", type: 3};
+            context.commit('setShowAlert', alert);
+          }
+          resolve(response.data);
+        })
+        .catch(function (error) {
+          // Проблемы на линии
+          reject(error);
+          console.log(error);
+          let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
+          context.commit('setShowAlert', alert);
+          context.commit("setShowWait", false);
+        });
       });
     },
   },
