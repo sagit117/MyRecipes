@@ -196,8 +196,9 @@ export default new Vuex.Store({
         // залогинен
         context.commit("setShowWait", false); // выключаем компонент ожидания
         // если пользователь получен меням данные 
-        if (response !== null) return;
+        if (response === null) return;
         if (parseInt(response.data.id) > 0) context.commit('setUserData', response.data);
+        console.log('loginedUserHash');
       })
       .catch(function (error) {
         // Проблемы на линии

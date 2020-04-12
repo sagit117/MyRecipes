@@ -95,16 +95,12 @@
 				if (this.patronymic.length > 32) this.patronymic = this.patronymic.slice(0, 32);
 				(!this.testInput(this.patronymic)) ? this.errorType.patronymic = true : this.errorType.patronymic = false;
 			},
-			minLengthName() {
-				(this.name.length === 0) ? this.errorType.name = true : this.errorType.name = false;
-			},
 			testInput(value) {
 				if (value == '') return true;
 				let reg = /^[a-zа-яё\s]+$/iu; //[А-Я-Ё]/gi;
 				return reg.test(value);
 			},
 			saveData() {
-				this.minLengthName();
 				if (this.textError === '') this.$store.dispatch("changeDataUser", { name: this.name.trim(), surname: this.surname.trim(), patronymic: this.patronymic.trim(), id: this.$store.getters.getUser.id });
 			},
 
