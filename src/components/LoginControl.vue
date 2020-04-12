@@ -42,3 +42,10 @@
 		},
 	}	
 </script>
+
+<style scoped>
+	a {
+		padding: 15px;
+		line-height: 2em;
+	}
+</style>

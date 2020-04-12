@@ -135,10 +135,6 @@
 		return mysqli_insert_id($link);
 	}
 
-	/*
-
-	
-
 	function getHashUser($id_user) {
 		// получить значение хэш из БД по ИД пользователя и агенту
 		global $link;
@@ -148,7 +144,5 @@
 
 		return mysqli_fetch_row($result)[0]; // вернуть первый найденый
 	}
-
 	
-*/
- ?>
+?>

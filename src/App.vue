@@ -8,6 +8,7 @@
 
     <Wait v-if="this.$store.getters.getShowWait" />
     <Alert v-if="this.$store.getters.getShowAlert.show" />
+    <UpScroll v-if="visibleUpScroll" />
 
   </div>
 </template>
@@ -21,6 +22,7 @@
   import LoginControl from './components/LoginControl.vue'
   import Wait from './components/Wait.vue'
   import Alert from './components/Alert.vue'
+  import UpScroll from './components/UpScroll.vue'
 
   export default {
     name: 'app',
@@ -29,12 +31,45 @@
       LoginControl,
       Wait,
       Alert,
+      UpScroll,
+    },
+
+    data() {
+      return {
+        visibleUpScroll: false,
+      }
+    },
+
+    created() {
+      window.addEventListener('scroll', this.handleScroll);
+
+      let id = this.getCookie('id');
+      if (id > 0) this.$store.dispatch('loginedUserHash', id);
+    },
+
+    methods: {
+      handleScroll() {
+        // видимость дива с кнопкой на верх
+        this.visibleUpScroll = (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) ? true : false;
+      },
+      getCookie(name) {
+        let matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([.$?*|{}()[\]\\/+^])/g, '\\$1') + "=([^;]*)"));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+      },
+    },
+
+    destroyed: function () {
+      window.removeEventListener('scroll', this.handleScroll);
     },
 
   }
 </script>
 
 <style>
+
+  body {
+    margin: 0;
+  }
 
   #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;

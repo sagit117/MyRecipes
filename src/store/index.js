@@ -40,14 +40,29 @@ export default new Vuex.Store({
       state.alert.type = data.type;
     },
     setUserData(state, data) { // установка значений пользователя
-      state.user.id = data.id;
-      state.user.post = data.post;
-      state.user.name = (data.name !== null) ? data.name : '';
-      state.user.surname = (data.surname !== null) ? data.surname : '';
-      state.user.patronymic = (data.patronymic !== null) ? data.patronymic : '';
-      state.user.datereg = data.datereg;
-      state.user.rule = data.rule;
+      if (data === null) {
+        state.user.id = 0;
+        state.user.post = '';
+        state.user.name = '';
+        state.user.surname = '';
+        state.user.patronymic = '';
+        state.user.datereg = '';
+        state.user.rule = '';
+      } else {
+        state.user.id = data.id;
+        state.user.post = data.post;
+        state.user.name = (data.name !== null) ? data.name : '';
+        state.user.surname = (data.surname !== null) ? data.surname : '';
+        state.user.patronymic = (data.patronymic !== null) ? data.patronymic : '';
+        state.user.datereg = data.datereg;
+        state.user.rule = data.rule;
+      }
     },
+    setNameUser(state, data) { // установить ФИО пользователя
+      state.user.name = data.name;
+      state.user.surname = data.surname;
+      state.user.patronymic = data.patronymic;
+    }
   },
 
   actions: {
@@ -67,6 +82,7 @@ export default new Vuex.Store({
           if (response.data.id > 0) {
             context.commit('setUserData', response.data);
             resolve('ok');
+            context.dispatch('setCookie', { name: 'id', value: response.data.id , delCookie: false });
           } else {
             resolve(response.data);
           }
@@ -163,6 +179,63 @@ export default new Vuex.Store({
           context.commit("setShowWait", false);
           reject(error);
         });
+      });
+    },
+    setCookie(context, data) { // установить куки
+      // если флаг удалить куки, тогда дата действия куки - 30 дней, иначе + 30 дней
+      let date = (data.delCookie) ? new Date(Date.now() - 30*86400e3) : new Date(Date.now() + 30*86400e3);
+      date = date.toUTCString(); // преобразует дату в строку, используя часовой пояс UTC.
+      // установить куки
+      document.cookie = encodeURIComponent(data.name) + '=' + encodeURIComponent(data.value) + "; expires=" + date + "; samesite=lax";
+    },
+    async loginedUserHash(context, id) { // логин по хэш коду и ид
+      context.commit("setShowWait", true); // включаем компонент ожидания
+
+      axios.get(this.state.domainName + 'api/login.php?userID=' + id)
+      .then(function (response) {
+        // залогинен
+        context.commit("setShowWait", false); // выключаем компонент ожидания
+        // если пользователь получен меням данные 
+        if (response !== null) return;
+        if (parseInt(response.data.id) > 0) context.commit('setUserData', response.data);
+      })
+      .catch(function (error) {
+        // Проблемы на линии
+        console.log(error);
+        let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
+        context.commit('setShowAlert', alert);
+        context.commit("setShowWait", false);
+      });
+    },
+    async changeDataUser(context, userData) { // смена данных пользователя (ФИО)
+      let formData = new FormData();
+      formData.append("name", userData.name);
+      formData.append("surname", userData.surname);
+      formData.append("patronymic", userData.patronymic);
+      formData.append("id", userData.id);
+
+      context.commit("setShowWait", true);
+
+      axios.post(this.state.domainName + 'api/saveDataUser.php', formData)
+      .then(function (response) {
+        // Сохранено
+        context.commit("setShowWait", false);
+        
+        if (response.data.errorCode == 0) {
+          let alert = {show: true, caption: "Успешно", text: "Данные сохранены.", type: 3};
+          context.commit('setShowAlert', alert);
+          context.commit('setNameUser', { userData });
+        } else {
+          let alert = {show: true, caption: "Не удалось внести изменения.", text: response.data, type: 1};
+          context.commit('setShowAlert', alert);
+        } 
+      })
+      .catch(function (error) {
+        // Проблемы на линии
+        console.log(error);
+        let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
+        context.commit('setShowAlert', alert);
+        context.commit("setShowWait", false);
       });
     },
   },

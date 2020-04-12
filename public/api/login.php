@@ -26,7 +26,7 @@
 		if (count($user) > 0) {
 		    if ($user[0]->pass === $pass) {
 		    	updateUserHash($user[0]->id);
-		        echo json_encode($user[0]); exit();
+		      echo json_encode($user[0]); exit();
 		    } else {
 		    	$res->errorCode = 1;
 		    	$res->errorText = 'Логин или пароль не совпадают!';
@@ -39,23 +39,21 @@
 		}
 	}
 
-	/*if (intval($_GET['userID']) > 0) { 
+	if (intval($_GET['userID']) > 0) { 
 		// логин по hash
-		$id_user = intval($_COOKIE['id']); 		// intval($_GET['userID']);  получаем куки ИД
-		$hash = getSession('hash');				// получаем хэш из сессии
+		$id_user = intval($_COOKIE['id']); 		// получаем куки ИД
+		$hash = getSession('hash');						// получаем хэш из сессии
 		if ($hash == getHashUser($id_user)) {	// если хэш в сессии найден в БД хэша по ИД пользователя
-			$user = getUser("id", $id_user);	// получить данные пользователя по ИД
+			$user = getUser("id", $id_user);		// получить данные пользователя по ИД
 			echo json_encode($user[0]); exit(); // вернуть данные пользователя
-		}/* else {
-			echo "$hash == " . getHashUser($id_user); exit();
-		}*/
-	/*}
+		}
+	}
 
 	function verifyUser($userID) {
 		// проверить совпадает ли хэш с ИД пользователя
 		$hash = getSession('hash');
 		$userID = intval($userID);
 		return ($hash == getHashUser($userID)) ? true : false;
-	}*/
+	}
 
 ?>

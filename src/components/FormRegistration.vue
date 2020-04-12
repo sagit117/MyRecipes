@@ -82,18 +82,10 @@
 				this.minLengthPass();
 			},
 			minLengthLogin() {
-				if (this.login.length === 0) {
-					this.errorType.name = true;
-				} else {
-					this.errorType.name = false;
-				}
+				(this.login.length === 0) ? this.errorType.name = true : this.errorType.name = false;
 			},
 			minLengthPass() {
-				if (this.pass.length === 0) {
-					this.errorType.pass = true;
-				} else {
-					this.errorType.pass = false;
-				}
+				(this.pass.length === 0) ? this.errorType.pass = true : this.errorType.pass = false;
 			},
 			sendCode() {
 				// Выслать код
