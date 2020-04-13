@@ -14,7 +14,7 @@
     public $author_id = 0;
   }
 
-  function getCategories($parent_id, $author_id) {
+  function getCategories($parent_id, $author_id) { // получить категории
     global $link;
     $parent_id = intval($parent_id);
     $author_id = intval($author_id);
@@ -36,14 +36,15 @@
     return $arr;
   }
 
-  /*  function addNewCategory($parent_id, $name, $author_id) {
-        global $link;
-        $name = mysqli_real_escape_string($link, $name);
-        $parent_id = intval($parent_id);
+  function addNewCategory($parent_id, $name, $author_id) { // создать категорию
+    global $link;
+    $name = mysqli_real_escape_string($link, $name);
+    $parent_id = intval($parent_id);
+    $author_id = intval($author_id);
 
-        mysqli_query($link, "INSERT INTO `categories_recipes`(`parent_id`, `name`, `author_id`) 
-                                    VALUES ('$parent_id', '$name', '$author_id')") or die(0);
-        return mysqli_insert_id($link);
-    }*/
+    mysqli_query($link, "INSERT INTO `categories_recipes`(`parent_id`, `name`, `author_id`) 
+                              VALUES ('$parent_id', '$name', '$author_id')") or die(0);
+    return mysqli_insert_id($link);
+  }
 
 ?>

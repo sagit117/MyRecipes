@@ -7,7 +7,7 @@
       <option v-for="item in this.$store.getters.getCategoriesRecipe" 
               :key="item.id"
               :value="item.id"
-              >{{ item.name }}</option>
+              :selected="parseInt(item.id) === valueSel">{{ item.name }}</option>
     </select>
 
     <template v-if="showAddBtn">
@@ -19,10 +19,13 @@
       <div class="newCategory" v-if="showAddDiv">
           <input  type="text" 
                   autofocus
-                  placeholder="Введите название">
+                  placeholder="Введите название"
+                  v-model="nameCategory"
+                  @input="inputName"
+                  :class="{ error: errName }">
           <div>
             <button @click="()=>{ this.showAddDiv = false }">Отмена</button>
-            <button >Сохранить</button>
+            <button @click="saveCat">Сохранить</button>
           </div>
       </div>
     </template>
@@ -39,11 +42,32 @@
     data() {
       return {
         showAddDiv: false,
+        nameCategory: '',
+        errName: false,
+        valueSel: 0,        // ID для выбранной категории
       }
     },
 
     mounted() {
       this.$store.dispatch('loadCategoriesRecipes', { parent_id: 0, author_id: this.$store.getters.getUser.id });
+    },
+
+    methods: {
+      inputName() {
+        (this.nameCategory.trim() !== '') ? this.errName = false : this.errName = true;
+      },
+      saveCat() {
+        this.inputName();
+        if (!this.errName) {
+          this.$store.dispatch('addCategorie', { parent_id: 0, name: this.nameCategory.trim(), author_id: this.$store.getters.getUser.id })
+          .then((resolve) => {
+            this.showAddDiv = false;
+            this.nameCategory = '';
+            if (resolve > 0) this.valueSel = resolve;
+          });
+        } 
+      },
+
     },
 
   }

@@ -291,6 +291,31 @@ export default new Vuex.Store({
         context.commit("setShowWait", false);
       });
     },
+    async addCategorie(context, data) { // добавление новой категории
+      return new Promise((resolve, reject) => {context.commit("setShowWait", true);
+
+        axios.get(this.state.domainName + 'api/addCategoryRecipe.php?id_parent=' + data.parent_id + '&name=' + data.name + '&author_id=' + data.author_id)
+        .then(function (response) {
+          // Сохранено
+          context.commit("setShowWait", false);
+          if (response.data.errorCode == 0) {
+            resolve(response.data.id);
+            context.dispatch('loadCategoriesRecipes', { parent_id: data.parent_id, author_id: data.author_id });
+          } else {
+            let alert = { show: true, caption: "Не удалось сохранить!", text: response.data.errorText, type: 1 };
+            context.commit('setShowAlert', alert);
+          }
+        })
+        .catch(function (error) {
+          // Проблемы на линии
+          console.log(error);
+          reject(error);
+          let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
+          context.commit('setShowAlert', alert);
+          context.commit("setShowWait", false);
+        });
+      });
+    },
   },
 
   getters: {

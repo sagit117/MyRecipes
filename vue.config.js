@@ -1,7 +1,8 @@
 module.exports = {
   pwa: {
-    themeColor: '#2BC35D',
-    name: 'My Recipes'
+    themeColor: '#21793D',
+    name: 'My Recipes',
+    msTileColor: '#21793D'
   },
 
   productionSourceMap: false

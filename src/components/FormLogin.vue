@@ -156,6 +156,10 @@
 		right: 20px;
 	}
 
+	.field {
+		flex-wrap: wrap;
+	}
+
 	#href {
 		margin-left: 0px;
 		margin-right: 0px;
