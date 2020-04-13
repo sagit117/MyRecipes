@@ -2,7 +2,7 @@
 	<div class="showCategory">
 		<label>Выбрать категорию: </label>
 
-    <select ref="listCategories">
+    <select ref="listCategories" @change="()=>{ this.$emit('change-group', this.$refs.listCategories.value) }">
 			<option value="0">Все</option>
       <option v-for="item in this.$store.getters.getCategoriesRecipe" 
               :key="item.id"
@@ -76,6 +76,9 @@
 <style scoped>
   .showCategory {
     padding-left: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .add {
@@ -103,6 +106,12 @@
     width: 100%;
     margin-bottom: 10px;
   }
+
+@media (min-width: 100px) and (max-width: 667px) {
+  .showCategory {
+    flex-wrap: wrap;
+  }
+}
 
 </style>
 

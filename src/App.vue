@@ -18,6 +18,7 @@
     <Wait v-if="this.$store.getters.getShowWait" />
     <Alert v-if="this.$store.getters.getShowAlert.show" />
     <UpScroll v-if="visibleUpScroll" />
+    <BigFoto  v-if="this.$store.getters.getBigFotoData.show"/>
 
   </div>
 </template>
@@ -32,6 +33,7 @@
   import Wait from './components/Wait.vue'
   import Alert from './components/Alert.vue'
   import UpScroll from './components/UpScroll.vue'
+  import BigFoto from './components/BigFoto.vue'
 
   export default {
     name: 'app',
@@ -41,6 +43,7 @@
       Wait,
       Alert,
       UpScroll,
+      BigFoto,
     },
 
     data() {

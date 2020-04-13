@@ -28,7 +28,16 @@ export default new Vuex.Store({
       rule: '',
     },
     // категории рецептов
-    categoriesRecipes: '',                      // JSON категории рецептов по родителю, автору 
+    categoriesRecipes: '',                      // JSON категории рецептов по родителю, автору
+    // фото рецепты
+    fotoRecipes: '',                            // JSON фото рецептов по страницам, авторам и родителю
+    limit_foto_recipes: 30,                     // лимит вывода на страницу 
+    // BigFoto
+    bigFoto: {
+      show: false,                              // Показать див для просмотра изображений
+      arrayImg: [],                             // Массив картинок
+      position_img: 0,                          // Позиция фото
+    },
   },
 
   mutations: {
@@ -67,6 +76,14 @@ export default new Vuex.Store({
     },
     setCategoriesRecipes(state, data) { // установка категорий рецептов
       state.categoriesRecipes = data;
+    },
+    setDataFotoRecipes(state, data) { // установка данных фото рецептов
+      state.fotoRecipes = data;
+    },
+    setShowBigFoto(state, data) { // показать окно большого фото
+      state.bigFoto.show = data.show;
+      state.bigFoto.arrayImg = data.arrayImg;
+      state.bigFoto.position_img = data.position_img;
     },
   },
 
@@ -316,6 +333,30 @@ export default new Vuex.Store({
         });
       });
     },
+    async loadFotorecipes(context, data) { // загрузить данные фоторецепта по фильтрам
+      let formData = new FormData(data.form);
+      formData.append('parent_id', data.parent_id);
+      formData.append('limit', this.state.limit_foto_recipes);
+      formData.append('author_id', data.author_id);
+      formData.append('page', data.page);
+      formData.append('diet', data.diet);
+
+      context.commit("setShowWait", true);
+
+      axios.post(this.state.domainName + 'api/loadFotoRecipes.php', formData)
+      .then(function (response) {
+        // Загружено
+        context.commit("setShowWait", false);
+        context.commit('setDataFotoRecipes', response.data);
+      })
+      .catch(function (error) {
+        // Проблемы на линии
+        console.log(error);
+        let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
+        context.commit('setShowAlert', alert);
+        context.commit("setShowWait", false);
+      });
+    },
   },
 
   getters: {
@@ -330,6 +371,15 @@ export default new Vuex.Store({
     },
     getCategoriesRecipe: state => {
       return state.categoriesRecipes;
+    },
+    getDomainName: state => {
+      return state.domainName;
+    },
+    getDataFotoRecipes: state => {
+      return state.fotoRecipes;
+    },
+    getBigFotoData: state => {
+      return state.bigFoto;
     },
   },
 
