@@ -357,6 +357,48 @@ export default new Vuex.Store({
         context.commit("setShowWait", false);
       });
     },
+    async saveFotoRecipes(context, data) { // сохранить фото рецепт
+      return new Promise((resolve, reject) => {
+        let formData = new FormData();
+        formData.append("name", data.name);
+        formData.append("parent_id", data.parent_id);
+        formData.append("diet", data.diet);
+        formData.append("author_id", data.author_id);
+        
+        for (let i=0; i < data.images.length; i++) {
+          formData.append(`fileFoto[${i}]`, data.images[i]);
+        }
+
+        context.commit("setShowWait", true);
+
+        axios.post(this.state.domainName + 'api/saveFotoRecipes.php', formData, 
+          /*{ headers: {'Content-Type': 'multipart/form-data'}*/
+          { headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        })
+        .then(function (response) {
+          resolve(response);
+          // Сохранено
+          context.commit("setShowWait", false);
+
+          if (response.data.count_error_img == 0 && response.data.errorText == '') {
+            let alert = {show: true, caption: "Успешно", text: "Данные сохранены.", type: 3};
+            context.commit('setShowAlert', alert);
+          } else {
+            let alert = {show: true, caption: "Прошло не совсем гладко", text: response.data, type: 2};
+            context.commit('setShowAlert', alert);
+            console.log(response.data);
+          }
+        })
+        .catch(function (error) {
+          // Проблемы на линии
+          reject(error);
+          console.log(error);
+          let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
+          context.commit('setShowAlert', alert);
+          context.commit("setShowWait", false);
+        });
+      });
+    },
   },
 
   getters: {

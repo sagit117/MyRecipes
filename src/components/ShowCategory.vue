@@ -22,7 +22,8 @@
                   placeholder="Введите название"
                   v-model="nameCategory"
                   @input="inputName"
-                  :class="{ error: errName }">
+                  :class="{ error: errName }"
+                  @keyup.enter="saveCat">
           <div>
             <button @click="()=>{ this.showAddDiv = false }">Отмена</button>
             <button @click="saveCat">Сохранить</button>

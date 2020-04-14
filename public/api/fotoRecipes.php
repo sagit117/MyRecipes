@@ -23,29 +23,29 @@
     public $author_id = 0;
   }
 
-    /*function saveFotoRecipes($arrImg, $name, $parent_id, $author_id, $diet) {
-    	global $link;
-    	$parent_id = intval($parent_id);
-    	$name = mysqli_real_escape_string($link, $name);
-    	$author_id = intval($author_id);
-        $diet = intval($diet);
+  function saveFotoRecipes($arrImg, $name, $parent_id, $author_id, $diet) {
+    global $link;
+    $parent_id = intval($parent_id);
+    $name = mysqli_real_escape_string($link, $name);
+    $author_id = intval($author_id);
+    $diet = intval($diet);
 
-    	mysqli_query($link, "INSERT INTO 	`foto_recipes` (`parent_id`, `name`, `author_id`, `diet`) 
+    mysqli_query($link, "INSERT INTO 	`foto_recipes` (`parent_id`, `name`, `author_id`, `diet`) 
     								VALUES 	('$parent_id', '$name', '$author_id', '$diet')") or die(0);
-    	$id = mysqli_insert_id($link);
+    $id = mysqli_insert_id($link);
 
-    	if ($id > 0) {
-    		foreach ($arrImg as $key => $value) {
-    			$image_name = $value->image_name;
-    			if ($value->errorText == 0) {
-    				mysqli_query($link, "INSERT INTO 	`img_foto_recipes` (`parent_id`, `path_img`, `author_id`) 
+    if ($id > 0) {
+    	foreach ($arrImg as $key => $value) {
+    		$image_name = $value->image_name;
+    		if ($value->errorText == 0) {
+    			mysqli_query($link, "INSERT INTO 	`img_foto_recipes` (`parent_id`, `path_img`, `author_id`) 
     											VALUES 	('$id', '$image_name', '$author_id')");
     			}
     		}
     	}
 
-    	return $id;
-    }*/
+    return $id;
+  }
 
   function getFotoRecipes($parent_id, $author_id, $page, $diet, $limit) {
     global $link;

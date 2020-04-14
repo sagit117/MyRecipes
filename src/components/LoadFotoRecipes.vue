@@ -9,10 +9,11 @@
     <div class="item">
       <label>Название рецепта: </label>
       <input  type="text" 
-              name="nameRecipes" 
               v-model="nameRecipes" 
               :class="{ error: isError }"
-              @input="minLengthRec"/>
+              @input="minLengthName"
+              placeholder="Введите название"
+              @keyup.enter="saveRecipe">
     </div>
     <div class="item">
       <div class="diet">     
@@ -21,7 +22,9 @@
     </div>
     <div class="item">
       <span class="errorText">{{ errorText }}</span>
-      <button @click="saveRecipe" :disabled="block">Сохранить</button>
+    </div>
+    <div class="item">
+      <button :disabled="block" @click="saveRecipe">Сохранить</button>
     </div>
     <div class="close" title="Закрыть" @click="() => { this.$emit('close', false) }">
       &#215;
@@ -52,12 +55,54 @@
         images: [],
         nameRecipes: '',
         block: false,
+        isError: false,
       }
     },
 
     methods: {
       getImage(data) {
         this.images = data; 
+      },
+      minLengthName() {
+        if (this.nameRecipes === '') {
+          this.errorText = "Название не должно быть пустым!";
+          this.isError = true;
+        } else {
+          this.errorText = "";
+          this.isError = false;
+        }
+      },
+      saveRecipe() {
+        // сохранить рецепт
+        this.minLengthName();
+        if (this.images.length === 0) this.errorText = 'Необходимо загрузить миниммум одно фото!';
+
+        if (!this.isError && this.images.length !== 0) {
+          this.block = true;
+
+          let imgOrder = [];
+          let order = this.$refs.loadFoto.order;
+
+          for (let i=0; i<order.length; i++) {
+            imgOrder.push(this.images[order[i]]);
+          }
+
+          for (let i=0; i<this.images.length; i++) {
+            if (order.indexOf(i) == -1) imgOrder.push(this.images[i]);
+          }
+
+          this.$store.dispatch('saveFotoRecipes', { 
+            name: this.nameRecipes, 
+            parent_id: this.$refs.listCategories.$refs.listCategories.value,
+            images: imgOrder,
+            diet: (this.diet) ? 1 : 0,
+            author_id: this.$store.getters.getUser.id,
+          }).then(() => {
+            this.images = [];
+            this.block = false;
+            this.$emit("close");
+          });
+        }
       },
 
     },
@@ -84,12 +129,8 @@
     cursor: pointer;
   }
 
-  input[type=checkbox] {
-    cursor: pointer;
-    margin-right: 5px;
-    margin-left: 15px;
-    width: 20px;
-    height: 20px;
+  .error {
+    border-color: red;
   }
 
   .item {
@@ -99,4 +140,22 @@
     margin-top: 10px;
     position: relative;
   }
+
+  .errorText {
+    color: red;
+  }
+
+  input[type=checkbox] {
+    cursor: pointer;
+    margin-right: 5px;
+    margin-left: 15px;
+    width: 20px;
+    height: 20px;
+  }
+
+@media (min-width: 100px) and (max-width: 415px) {
+  input[type=text] {
+    width: 100%;
+  }
+}
 </style>
