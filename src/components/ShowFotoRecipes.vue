@@ -1,33 +1,44 @@
 <template>
 	<div class="showFotoRecipes">
-		<div class="MenuFotoRecipes">
-			<div class="menuItem">
-				<ShowCategory ref='listCategories' :showAddBtn="true" @change-group="changeGroup" />
-			</div>
-			<div class="menuItem">
-				<label><input type="checkbox" v-model="diet" @change="clickDiet">Только диетическое</label>
-			</div>
-			<div 	class="menuItem" 
-						v-if="typeShowList === 2"
-						@click="setTypeShowList(1)">
-				<button>Показать в виде строк</button>
-			</div>
-			<div 	class="menuItem" 
-						v-else
-						@click="setTypeShowList(2)">
-				<button>Показать в виде кубов</button>
-			</div>
-		</div>
 
-		<div class="listFotoRecipes" v-if="typeShowList === 1">
-			<div class="itemRecipe" v-for="(recipe, index) in this.$store.getters.getDataFotoRecipes" :key="recipe.id">
-				<a href="#" @click.prevent="setShowRow(index)">{{ recipe.name }}</a>
-				<ItemFotoRecipe :recipe="recipe" v-if="showRow.indexOf(index) !== -1"/>
+		<template v-if="!showAddNewRcipe">
+			<div class="btnAdd">
+				<button title="Загрузить новый рецепт" @click="() => { this.showAddNewRcipe = true }">Загрузить новый рецепт</button>
 			</div>
-		</div>
-		<div class="listFotoRecipes" v-else>
-			<ItemFotoRecipe v-for="recipe in this.$store.getters.getDataFotoRecipes" :key="recipe.id" :recipe="recipe" />
-		</div>
+			<hr>
+
+			<div class="MenuFotoRecipes">
+				<div class="menuItem">
+					<ShowCategory ref='listCategories' @change-group="changeGroup" />
+				</div>
+				<div class="menuItem">
+					<label><input type="checkbox" v-model="diet" @change="clickDiet">Только диетическое</label>
+				</div>
+				<div 	class="menuItem" 
+							v-if="typeShowList === 2"
+							@click="setTypeShowList(1)">
+					<button>Показать в виде строк</button>
+				</div>
+				<div 	class="menuItem" 
+							v-else
+							@click="setTypeShowList(2)">
+					<button>Показать в виде кубов</button>
+				</div>
+			</div>
+
+			<div class="listFotoRecipes" v-if="typeShowList === 1">
+				<div class="itemRecipe" v-for="(recipe, index) in this.$store.getters.getDataFotoRecipes" :key="recipe.id">
+					<a href="#" @click.prevent="setShowRow(index)">{{ recipe.name }}</a>
+					<ItemFotoRecipe :recipe="recipe" v-if="showRow.indexOf(index) !== -1"/>
+				</div>
+			</div>
+			<div class="listFotoRecipes" v-else>
+				<ItemFotoRecipe v-for="recipe in this.$store.getters.getDataFotoRecipes" :key="recipe.id" :recipe="recipe" />
+			</div>
+		</template>
+
+		<LoadFotoRecipes v-if="showAddNewRcipe" @close="showAddNewRcipe = false"/>
+
 	</div>
 </template>
 
@@ -39,11 +50,13 @@
 
   import ShowCategory from '@/components/ShowCategory.vue'
   import ItemFotoRecipe from '@/components/ItemFotoRecipe.vue'
+  import LoadFotoRecipes from '@/components/LoadFotoRecipes.vue'
 	
 	export default {
 		components: {
 			ShowCategory,
 			ItemFotoRecipe,
+			LoadFotoRecipes,
 		},
 
 		data() {
@@ -52,6 +65,7 @@
 				typeShowList: 2,
 				page: 1,
 				showRow: [],
+				showAddNewRcipe: false,
 			}
 		},
 
@@ -90,7 +104,7 @@
 				} else {
 					this.showRow.splice(this.showRow.indexOf(index), 1);
 				}
-			}
+			},
 
 		},
 
@@ -100,6 +114,20 @@
 <style scoped>
 	.showFotoRecipes {
 		text-align: left;
+		position: relative;
+	}
+
+	.btnAdd {
+		display: block;
+	}
+	.btnAdd > button {
+		background-color: royalblue;
+		height: 40px;
+	}
+
+	hr {
+		margin-left: 15px;
+		margin-right: 15px;
 	}
 
 	.MenuFotoRecipes {
