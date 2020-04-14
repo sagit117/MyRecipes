@@ -4,8 +4,8 @@
 		<span >
 			{{ (recipe.name.length > 30) ? recipe.name.substr(0, 30) + "..." : recipe.name }}
 		</span>
-		<div class="pen" name="pen" >
-			<img src="ico/pen.png" title="Редактировать" name="pen">Редактировать
+		<div class="pen" name="pen" @click.stop="() => { $emit('edit', recipe.id) }">
+			<img src="ico/pen.png" title="Редактировать" name="pen">Редактировать 
 		</div>
 		<a 	class="right" 
 				title="Следующее фото"

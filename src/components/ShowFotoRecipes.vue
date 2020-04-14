@@ -1,9 +1,9 @@
 <template>
 	<div class="showFotoRecipes">
 
-		<template v-if="!showAddNewRcipe">
+		<template v-if="state === 1">
 			<div class="btnAdd">
-				<button title="Загрузить новый рецепт" @click="() => { this.showAddNewRcipe = true }">Загрузить новый рецепт</button>
+				<button title="Загрузить новый рецепт" @click="() => { this.state = 2 }">Загрузить новый рецепт</button>
 			</div>
 			<hr>
 
@@ -29,15 +29,23 @@
 			<div class="listFotoRecipes" v-if="typeShowList === 1">
 				<div class="itemRecipe" v-for="(recipe, index) in this.$store.getters.getDataFotoRecipes" :key="recipe.id">
 					<a href="#" @click.prevent="setShowRow(index)">{{ recipe.name }}</a>
-					<ItemFotoRecipe :recipe="recipe" v-if="showRow.indexOf(index) !== -1"/>
+					<ItemFotoRecipe 
+						:recipe="recipe" 
+						v-if="showRow.indexOf(index) !== -1" 
+						@edit="edit" />
 				</div>
 			</div>
 			<div class="listFotoRecipes" v-else>
-				<ItemFotoRecipe v-for="recipe in this.$store.getters.getDataFotoRecipes" :key="recipe.id" :recipe="recipe" />
+				<ItemFotoRecipe 
+					v-for="recipe in this.$store.getters.getDataFotoRecipes" 
+					:key="recipe.id" 
+					:recipe="recipe" 
+					@edit="edit" />
 			</div>
 		</template>
 
-		<LoadFotoRecipes v-if="showAddNewRcipe" @close="showAddNewRcipe = false"/>
+		<LoadFotoRecipes v-if="state === 2" @close="state = 1"/>
+		<EditFotoRecipe v-if="state === 3" :id_fotorecipes="edit_id" @close="closeEdit"/>
 
 	</div>
 </template>
@@ -51,12 +59,14 @@
   import ShowCategory from '@/components/ShowCategory.vue'
   import ItemFotoRecipe from '@/components/ItemFotoRecipe.vue'
   import LoadFotoRecipes from '@/components/LoadFotoRecipes.vue'
+  import EditFotoRecipe from '@/components/EditFotoRecipe.vue'
 	
 	export default {
 		components: {
 			ShowCategory,
 			ItemFotoRecipe,
 			LoadFotoRecipes,
+			EditFotoRecipe,
 		},
 
 		data() {
@@ -65,7 +75,8 @@
 				typeShowList: 2,
 				page: 1,
 				showRow: [],
-				showAddNewRcipe: false,
+				state: 1,
+				edit_id: 0,
 			}
 		},
 
@@ -105,6 +116,10 @@
 					this.showRow.splice(this.showRow.indexOf(index), 1);
 				}
 			},
+			edit(id) {
+				this.state = 3;
+				this.edit_id = id;
+			}
 
 		},
 

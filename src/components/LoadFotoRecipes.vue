@@ -64,7 +64,7 @@
         this.images = data; 
       },
       minLengthName() {
-        if (this.nameRecipes === '') {
+        if (this.nameRecipes.trim() === '') {
           this.errorText = "Название не должно быть пустым!";
           this.isError = true;
         } else {
@@ -92,7 +92,7 @@
           }
 
           this.$store.dispatch('saveFotoRecipes', { 
-            name: this.nameRecipes, 
+            name: this.nameRecipes.trim(), 
             parent_id: this.$refs.listCategories.$refs.listCategories.value,
             images: imgOrder,
             diet: (this.diet) ? 1 : 0,
