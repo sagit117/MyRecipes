@@ -120,8 +120,7 @@
 <style scoped>
 
   .loadFoto {
-    margin-right: 15px;
-    margin-left: 15px;
+
   }
   
   .isVisible {
@@ -130,14 +129,14 @@
 
   .imgDiv {
     position: relative;
-    width: 300px;
+    width: 290px;
     height: 400px;
     box-shadow: 2px 2px 4px #000;
     margin: 4px;
     display: inline-block;
   }
   .imgDiv > img {
-    width: 300px;
+    width: 290px;
     height: 400px;
     object-fit: cover;
   }

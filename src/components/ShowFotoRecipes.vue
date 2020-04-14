@@ -133,7 +133,7 @@
 	.MenuFotoRecipes {
 		display: flex;
 		margin-right: 15px;
-		margin-left: 5px;
+		margin-left: 15px;
 	}
 
 	.itemRecipe {

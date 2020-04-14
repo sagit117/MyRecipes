@@ -3,25 +3,26 @@
     <LoadFoto :autoLoad="true" 
               @input-file="getImage"
               ref="loadFoto" />
-    <div class="categories">
+    <div class="item">
       <ShowCategory ref="listCategories" :showAddBtn="true" />
     </div>
-    <div class="categories">
+    <div class="item">
       <label>Название рецепта: </label>
       <input  type="text" 
               name="nameRecipes" 
               v-model="nameRecipes" 
               :class="{ error: isError }"
               @input="minLengthRec"/>
-      <div class="diet">
-        <label><input type="checkbox" v-model="diet">Диетическое</label>
-      </div>
-  </div>
-    <span class="errorText">{{ errorText }}</span>
-    <div class="categories">
-      <button class="all" @click="saveRecipe" :disabled="block">Сохранить</button>
     </div>
-
+    <div class="item">
+      <div class="diet">     
+        <label>Диетическое<input type="checkbox" v-model="diet"></label>
+      </div>
+    </div>
+    <div class="item">
+      <span class="errorText">{{ errorText }}</span>
+      <button @click="saveRecipe" :disabled="block">Сохранить</button>
+    </div>
     <div class="close" title="Закрыть" @click="() => { this.$emit('close', false) }">
       &#215;
     </div>
@@ -63,3 +64,39 @@
 
   }
 </script>
+
+<style scoped>
+  .loadFotoRecipes {
+    display: block;
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+
+  .diet {
+    display: flex;
+    align-items: center;
+  }
+
+  .diet > label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  input[type=checkbox] {
+    cursor: pointer;
+    margin-right: 5px;
+    margin-left: 15px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .item {
+    float: left;
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    position: relative;
+  }
+</style>

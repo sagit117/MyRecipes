@@ -75,9 +75,8 @@
 
 <style scoped>
   .showCategory {
-    padding-left: 10px;
+    /*padding-left: 15px;*/
     display: flex;
-    justify-content: center;
     align-items: center;
   }
 
@@ -110,6 +109,7 @@
 @media (min-width: 100px) and (max-width: 667px) {
   .showCategory {
     flex-wrap: wrap;
+    justify-content: center;
   }
 }
 
