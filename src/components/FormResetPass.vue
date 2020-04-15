@@ -4,7 +4,7 @@
 			<label>Логин(e-mail): </label>
 			<input 	type="text" 
 							autofocus
-							v-model="login"
+							v-model.trim="login"
 							@input="inputLogin"
 							:class="{ isErr: errorText !== '' }"
 							@keyup.enter="sendData"
@@ -43,14 +43,14 @@
 				}
 			},
 			sendData() {
-				if (!this.testEmail(this.login.trim())) {
+				if (!this.testEmail(this.login)) {
 					this.errorText = "Необходимо ввести корректный e-mail"
 				} else {
 					this.errorText = '';
 				}
 
 				if (this.errorText === '') {
-					this.$store.dispatch("changePass", this.login.trim())
+					this.$store.dispatch("changePass", this.login)
 					.then((response) => {
 						if (response.errorCode === 0) {
 							this.$emit('open-page', 1);

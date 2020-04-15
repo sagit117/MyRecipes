@@ -25,7 +25,7 @@
       <input type="text" 
         autofocus
         placeholder="Введите название"
-        v-model="nameCategory"
+        v-model.trim="nameCategory"
         @input="inputName"
         :class="{ error: errName }"
         @keyup.enter="saveCat">
@@ -60,12 +60,12 @@
 
     methods: {
       inputName() {
-        (this.nameCategory.trim() !== '') ? this.errName = false : this.errName = true;
+        (this.nameCategory !== '') ? this.errName = false : this.errName = true;
       },
       saveCat() {
         this.inputName();
         if (!this.errName) {
-          this.$store.dispatch('addCategorie', { parent_id: 0, name: this.nameCategory.trim(), author_id: this.$store.getters.getUser.id })
+          this.$store.dispatch('addCategorie', { parent_id: 0, name: this.nameCategory, author_id: this.$store.getters.getUser.id })
           .then((resolve) => {
             this.showAddDiv = false;
             this.nameCategory = '';

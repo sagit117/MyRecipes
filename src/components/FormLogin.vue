@@ -5,7 +5,7 @@
 			<input 	type="text" 
 							autocomplete="on" 
 							autofocus
-							v-model="login"
+							v-model.trim="login"
 							@input="inputLogin"
 							:class="{ isErr: errorText !== '' }"
 							@keyup.enter="sendData"
@@ -14,7 +14,7 @@
 		<div class="field">
 			<label>Пароль: </label>
 			<input 	type="password"
-							v-model="pass"
+							v-model.trim="pass"
 							@input="inputPass"
 							@keyup.enter="sendData"
 							placeholder="Введите пароль">
@@ -76,12 +76,12 @@
 				this.minLength();
 
 				if (this.errorText === '') {
-					if (!this.testEmail(this.login.trim())) {
+					if (!this.testEmail(this.login)) {
 						this.errorText = 'Необходимо ввести корректный e-mail!';
 						return;
 					}
 					
-					this.$store.dispatch('sendLogin', {login: this.login.trim(), pass: this.pass.trim()})
+					this.$store.dispatch('sendLogin', { login: this.login, pass: this.pass })
 					.then((response) => {
 						if (response === 'ok') {
 							this.$emit("open-page", 0);

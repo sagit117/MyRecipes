@@ -9,7 +9,7 @@
     <div class="item">
       <label>Название рецепта: </label>
       <input  type="text" 
-              v-model="nameRecipes" 
+              v-model.trim="nameRecipes" 
               :class="{ error: isError }"
               @input="minLengthName"
               placeholder="Введите название"
@@ -92,7 +92,7 @@
           }
 
           this.$store.dispatch('saveFotoRecipes', { 
-            name: this.nameRecipes.trim(), 
+            name: this.nameRecipes, 
             parent_id: this.$refs.listCategories.$refs.listCategories.value,
             images: imgOrder,
             diet: (this.diet) ? 1 : 0,

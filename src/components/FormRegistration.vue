@@ -4,7 +4,7 @@
 			<label>Логин: </label>
 			<input 	type="text" 
 							autofocus
-							v-model="login"
+							v-model.trim="login"
 							@input="inputLogin"
 							:class="{ isErr: errorType.name }"
 							@keyup.enter="send"
@@ -13,7 +13,7 @@
 		<div class="field">
 			<label>Пароль: </label>
 			<input 	type="password"
-							v-model="pass"
+							v-model.trim="pass"
 							@input="inputPass"
 							:class="{ isErr: errorType.pass }"
 							@keyup.enter="send"
@@ -22,7 +22,7 @@
 		<div class="field">
 			<label>Подтверждение: </label>
 			<input 	type="password"
-							v-model="confirmPass"
+							v-model.trim="confirmPass"
 							@input="inputPass"
 							@keyup.enter="send"
 							:class="{ isErr: this.errorType.confirmPass }"
@@ -35,7 +35,7 @@
 		</div>
 		<div class="field">
 				<input 	type="text"
-								v-model="userCode"
+								v-model.trim="userCode"
 								@keyup.enter="send"
 								:class="{ isErr: this.errorType.code }"
 								placeholder="Введите код">
