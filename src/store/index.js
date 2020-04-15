@@ -85,6 +85,13 @@ export default new Vuex.Store({
       state.bigFoto.arrayImg = data.arrayImg;
       state.bigFoto.position_img = data.position_img;
     },
+    delFoto(state, data) { // удаление фото
+      for (let idx in state.fotoRecipes) {
+        if (state.fotoRecipes[idx].id == data.rec_id) {
+          state.fotoRecipes[idx].img.splice(data.index, 1);
+        }
+      }
+    },
   },
 
   actions: {
@@ -397,6 +404,28 @@ export default new Vuex.Store({
           context.commit('setShowAlert', alert);
           context.commit("setShowWait", false);
         });
+      });
+    },
+    async deleteImg(context, data) { // удалить фото из фоторецепта
+      context.commit("setShowWait", true);
+
+      axios.get(this.state.domainName + 'api/deleteFoto.php?id=' + data.id)
+      .then(function(response) {
+        context.commit("setShowWait", false);
+
+        if (response.data.errorCode == 0) {
+          context.commit('delFoto', data);
+        } else {
+          console.log(response.data);
+          let alert = {show: true, caption: "Ошибка!", text: response.data.errorText, type: 1};
+          context.commit('setShowAlert', alert);
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+        let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
+        context.commit('setShowAlert', alert);
+        context.commit("setShowWait", false);
       });
     },
   },

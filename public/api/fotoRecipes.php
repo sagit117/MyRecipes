@@ -94,27 +94,26 @@
     return $arrayRecipes;
   }
 
-    /*function deleteFoto($id) {
-        global $link;
-        $id = intval($id);
+  function getAuthorFoto($id) {
+    // Получить ИД автора фото по ИД записи
+    global $link;
+    $result = mysqli_query($link, "SELECT `author_id` FROM `img_foto_recipes` WHERE `id`='$id' LIMIT 1");
+    return intval(mysqli_fetch_row($result)[0]);
+  }
 
-        $result = mysqli_query($link, "SELECT `path_img` FROM `img_foto_recipes` WHERE `id`='$id' LIMIT 1");
-        $path_img = mysqli_fetch_row($result)[0];
+  function deleteFoto($id) {
+    global $link;
+    $id = intval($id);
 
-        if ($path_img != '') {
-            mysqli_query($link, "DELETE FROM `img_foto_recipes` WHERE `id`='$id'");
-            return $path_img;
-        } else {
-            return 0;
-        }
+    $result = mysqli_query($link, "SELECT `path_img` FROM `img_foto_recipes` WHERE `id`='$id' LIMIT 1");
+    $path_img = mysqli_fetch_row($result)[0];
+
+    if ($path_img != '') {
+      mysqli_query($link, "DELETE FROM `img_foto_recipes` WHERE `id`='$id'");
+      return $path_img;
+    } else {
+      return 0;
     }
-
-    function getAuthorFoto($id) {
-        // Получить ИД автора фото по ИД записи
-        global $link;
-        $result = mysqli_query($link, "SELECT `author_id` FROM `img_foto_recipes` WHERE `id`='$id' LIMIT 1");
-        return intval(mysqli_fetch_row($result)[0]);
-    }*/
-
+  }
 
 ?>

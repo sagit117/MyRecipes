@@ -177,6 +177,7 @@
     font-size: 14px;
     height: 25px;
     outline: 0;
+    border-radius: 0;
   }
   input:hover {
     border-bottom: 1px solid #42b983;

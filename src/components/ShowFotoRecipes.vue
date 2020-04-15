@@ -3,13 +3,13 @@
 
 		<template v-if="state === 1">
 			<div class="btnAdd">
-				<button title="Загрузить новый рецепт" @click="() => { this.state = 2 }">Загрузить новый рецепт</button>
+				<button title="Загрузить новый рецепт" @click="()=>{ this.state = 2 }">Загрузить новый рецепт</button>
 			</div>
 			<hr>
 
 			<div class="MenuFotoRecipes">
 				<div class="menuItem">
-					<ShowCategory ref='listCategories' @change-group="changeGroup" />
+					<ShowCategory ref='listCategories' @change-group="changeGroup" :cat_id="0" />
 				</div>
 				<div class="menuItem">
 					<label><input type="checkbox" v-model="diet" @change="clickDiet">Только диетическое</label>
@@ -32,7 +32,7 @@
 					<ItemFotoRecipe 
 						:recipe="recipe" 
 						v-if="showRow.indexOf(index) !== -1" 
-						@edit="edit" />
+						@edit="edit(recipe)" />
 				</div>
 			</div>
 			<div class="listFotoRecipes" v-else>
@@ -40,12 +40,12 @@
 					v-for="recipe in this.$store.getters.getDataFotoRecipes" 
 					:key="recipe.id" 
 					:recipe="recipe" 
-					@edit="edit" />
+					@edit="edit(recipe)" />
 			</div>
 		</template>
 
-		<LoadFotoRecipes v-if="state === 2" @close="state = 1"/>
-		<EditFotoRecipe v-if="state === 3" :id_fotorecipes="edit_id" @close="closeEdit"/>
+		<LoadFotoRecipes v-if="state === 2" @close="winUpdate(1)"/>
+		<EditFotoRecipe v-if="state === 3" :recipe="edit_recipe" @close="winUpdate(1)"/>
 
 	</div>
 </template>
@@ -76,11 +76,11 @@
 				page: 1,
 				showRow: [],
 				state: 1,
-				edit_id: 0,
+				edit_recipe: {},
 			}
 		},
 
-		mounted() {
+		created() {
 			this.loadFotorecipes(0);
 			this.typeShowList = (!this.getCookie('typeShowList')) ? 2 : parseInt(this.getCookie('typeShowList'));
 		},
@@ -116,10 +116,14 @@
 					this.showRow.splice(this.showRow.indexOf(index), 1);
 				}
 			},
-			edit(id) {
+			edit(recipe) {
 				this.state = 3;
-				this.edit_id = id;
-			}
+				this.edit_recipe = recipe;
+			},
+			winUpdate(state) {
+				this.state = state;
+				this.loadFotorecipes(0);
+			},
 
 		},
 
@@ -194,7 +198,7 @@
 		margin-right: 15px;
 	}
 
-@media (min-width: 100px) and (max-width: 320px) {
+@media (min-width: 100px) and (max-width: 610px) {
 	.MenuFotoRecipes {
 		flex-wrap: wrap;
 		justify-content: center;

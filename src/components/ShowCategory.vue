@@ -4,7 +4,9 @@
       <label>Выбрать категорию: </label>
 
       <div class="option">
-        <select ref="listCategories" @change="()=>{ this.$emit('change-group', this.$refs.listCategories.value) }">
+        <select ref="listCategories" 
+          @change="()=>{ this.$emit('change-group', this.$refs.listCategories.value) }" 
+          :value="(id_cat) ? id_cat : 0">
           <option value="0">Все</option>
           <option v-for="item in this.$store.getters.getCategoriesRecipe" 
             :key="item.id"
@@ -40,6 +42,7 @@
   export default {
     props: {
       showAddBtn: Boolean,
+      id_cat: Number,
     },
 
     data() {
@@ -111,7 +114,7 @@
   }
 
   input {
-    width: 100%;
+    width: calc(100% - 10px);
     margin-bottom: 10px;
   }
 
@@ -119,9 +122,16 @@
     margin-right: 5px;
   }
 
-@media (min-width: 100px) and (max-width: 667px) {
+@media (min-width: 100px) and (max-width: 670px) {
   .showCategory {
     /*flex-wrap: wrap;*/
+    justify-content: center;
+  }
+}
+
+@media (min-width: 100px) and (max-width: 325px) {
+  .showCategoryItems {
+    flex-wrap: wrap;
     justify-content: center;
   }
 }

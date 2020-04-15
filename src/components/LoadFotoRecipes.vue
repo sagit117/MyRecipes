@@ -4,7 +4,7 @@
               @input-file="getImage"
               ref="loadFoto" />
     <div class="item">
-      <ShowCategory ref="listCategories" :showAddBtn="true" />
+      <ShowCategory ref="listCategories" :showAddBtn="true" :cat_id="0" />
     </div>
     <div class="item">
       <label>Название рецепта: </label>
@@ -121,7 +121,6 @@
     display: flex;
     align-items: center;
   }
-
   .diet > label {
     display: flex;
     justify-content: center;
