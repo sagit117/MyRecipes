@@ -10,7 +10,7 @@
 	header("Access-Control-Allow-Headers: *");
 
 	require 'fotoRecipes.php';
-	require 'login.php'
+	require 'login.php';
 	require_once 'user.php';
 
 	class Response {

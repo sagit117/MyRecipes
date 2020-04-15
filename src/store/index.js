@@ -220,7 +220,7 @@ export default new Vuex.Store({
         // если пользователь получен меням данные 
         if (response.data === null) return;
         if (parseInt(response.data.id) > 0) context.commit('setUserData', response.data);
-        console.log('loginedUserHash');
+        //console.log('loginedUserHash');
       })
       .catch(function (error) {
         // Проблемы на линии

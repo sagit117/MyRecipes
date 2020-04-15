@@ -55,6 +55,7 @@
 		position: relative;
 		cursor: pointer;
 		margin-top: 5px;
+		margin-right: 5px;
 		width: 272px;
 		height: 330px;
 		display: inline-block;

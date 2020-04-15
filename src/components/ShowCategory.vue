@@ -1,36 +1,38 @@
 <template>
-	<div class="showCategory">
-		<label>Выбрать категорию: </label>
+  <div class="showCategory">
+    <div class="showCategoryItems">
+      <label>Выбрать категорию: </label>
 
-    <select ref="listCategories" @change="()=>{ this.$emit('change-group', this.$refs.listCategories.value) }">
-			<option value="0">Все</option>
-      <option v-for="item in this.$store.getters.getCategoriesRecipe" 
-              :key="item.id"
-              :value="item.id"
-              :selected="parseInt(item.id) === valueSel">{{ item.name }}</option>
-    </select>
+      <div class="option">
+        <select ref="listCategories" @change="()=>{ this.$emit('change-group', this.$refs.listCategories.value) }">
+          <option value="0">Все</option>
+          <option v-for="item in this.$store.getters.getCategoriesRecipe" 
+            :key="item.id"
+            :value="item.id"
+            :selected="parseInt(item.id) === valueSel">{{ item.name }}</option>
+        </select>
 
-    <template v-if="showAddBtn">
-      <div class="addDiv" @click="()=>{ this.showAddDiv = !this.showAddDiv }">
-        <img  src="ico/add.png" 
-              class="add"  
-              title="Добавить категорию">
+        <div class="addDiv" @click="()=>{ this.showAddDiv = !this.showAddDiv }" v-if="showAddBtn">
+          <img src="ico/add.png" 
+            class="add"  
+            title="Добавить категорию">
+        </div>
       </div>
-      <div class="newCategory" v-if="showAddDiv">
-          <input  type="text" 
-                  autofocus
-                  placeholder="Введите название"
-                  v-model="nameCategory"
-                  @input="inputName"
-                  :class="{ error: errName }"
-                  @keyup.enter="saveCat">
-          <div>
-            <button @click="()=>{ this.showAddDiv = false }">Отмена</button>
-            <button @click="saveCat">Сохранить</button>
-          </div>
+    </div>
+    <div class="newCategory" v-if="showAddDiv">
+      <input type="text" 
+        autofocus
+        placeholder="Введите название"
+        v-model="nameCategory"
+        @input="inputName"
+        :class="{ error: errName }"
+        @keyup.enter="saveCat">
+      <div>
+        <button @click="()=>{ this.showAddDiv = false }">Отмена</button>
+        <button @click="saveCat">Сохранить</button>
       </div>
-    </template>
-	</div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -75,7 +77,7 @@
 </script>
 
 <style scoped>
-  .showCategory {
+  .showCategoryItems {
     /*padding-left: 15px;*/
     display: flex;
     align-items: center;
@@ -97,19 +99,29 @@
     box-shadow: 2px 2px 3px #000;
     padding: 10px;
     background-color: white;
+    max-width: 400px;
   }
 
   .error {
     border-color: red;
   }
+
+  .option {
+    display: flex;
+  }
+
   input {
     width: 100%;
     margin-bottom: 10px;
   }
 
+  button {
+    margin-right: 5px;
+  }
+
 @media (min-width: 100px) and (max-width: 667px) {
   .showCategory {
-    flex-wrap: wrap;
+    /*flex-wrap: wrap;*/
     justify-content: center;
   }
 }

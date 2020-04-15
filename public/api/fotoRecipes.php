@@ -51,13 +51,13 @@
     global $link;
     $parent_id = intval($parent_id);
     $author_id = intval($author_id);
-    $page = intval($page);
-    $diet = intval($diet);
     $limit = intval($limit);
+    $page = intval($page) * $limit;
+    $diet = intval($diet);
 
     $str_parent = ($parent_id === 0) ? "" : " `parent_id`='$parent_id' ";
     $str_diet = ($diet === 0) ? "" : " `diet`='$diet' ";
-    $str_author = ($author_id === 0) ? "" : " author_id`='$author_id' ";
+    $str_author = ($author_id === 0) ? "" : " `author_id`='$author_id' ";
 
     if ($str_parent !== '' AND ($str_diet !== '' OR $str_author !== '')) $str_parent .= " AND ";
     if ($author_id !== '' AND $str_diet !== '') $str_author .= " AND ";
