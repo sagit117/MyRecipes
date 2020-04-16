@@ -117,7 +117,7 @@
   .panelMenu {
     display: flex;
     height: 100px;
-    background-color: #41444a;
+    background-color: #d0e60b;
   }
 
   .itemMenu {
