@@ -34,6 +34,7 @@
   import Alert from './components/Alert.vue'
   import UpScroll from './components/UpScroll.vue'
   import BigFoto from './components/BigFoto.vue'
+  import lib from '@/lib/lib.js'
 
   export default {
     name: 'app',
@@ -56,7 +57,7 @@
     created() {
       window.addEventListener('scroll', this.handleScroll);
 
-      let id = this.getCookie('id');
+      let id = lib.getCookie('id');
       if (id > 0) this.$store.dispatch('loginedUserHash', id);
     },
 
@@ -64,10 +65,6 @@
       handleScroll() {
         // видимость дива с кнопкой на верх
         this.visibleUpScroll = (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) ? true : false;
-      },
-      getCookie(name) {
-        let matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([.$?*|{}()[\]\\/+^])/g, '\\$1') + "=([^;]*)"));
-        return matches ? decodeURIComponent(matches[1]) : undefined;
       },
       openMyRecipes() { // проверяет можно ли открыть мои рецепты, да - если залогинен, нет - показать форму логина
         if (this.$router.history.current.path === '/myrecipes') {

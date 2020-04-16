@@ -354,7 +354,12 @@ export default new Vuex.Store({
       .then(function (response) {
         // Загружено
         context.commit("setShowWait", false);
-        context.commit('setDataFotoRecipes', response.data);
+        if (response.data.errorCode > 0) {
+          let alert = {show: true, caption: "Не удалось загрузить списки!", text: response.data.errorText, type: 1};
+          context.commit('setShowAlert', alert);
+        } else {
+          context.commit('setDataFotoRecipes', response.data);
+        }
       })
       .catch(function (error) {
         // Проблемы на линии
@@ -407,25 +412,30 @@ export default new Vuex.Store({
       });
     },
     async deleteImg(context, data) { // удалить фото из фоторецепта
-      context.commit("setShowWait", true);
+      return new Promise((resolve, reject) => {
+        context.commit("setShowWait", true);
 
-      axios.get(this.state.domainName + 'api/deleteFoto.php?id=' + data.id)
-      .then(function(response) {
-        context.commit("setShowWait", false);
+        axios.get(this.state.domainName + 'api/deleteFoto.php?id=' + data.id)
+        .then(function(response) {
+          context.commit("setShowWait", false);
 
-        if (response.data.errorCode == 0) {
-          context.commit('delFoto', data);
-        } else {
-          console.log(response.data);
-          let alert = {show: true, caption: "Ошибка!", text: response.data.errorText, type: 1};
+          if (response.data.errorCode == 0) {
+            context.commit('delFoto', data);
+            resolve();
+          } else {
+            console.log(response.data);
+            let alert = {show: true, caption: "Ошибка!", text: response.data.errorText, type: 1};
+            context.commit('setShowAlert', alert);
+            reject(response.data);
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+          let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
           context.commit('setShowAlert', alert);
-        }
-      })
-      .catch(function(error) {
-        console.log(error);
-        let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
-        context.commit('setShowAlert', alert);
-        context.commit("setShowWait", false);
+          context.commit("setShowWait", false);
+          reject(error);
+        });
       });
     },
   },

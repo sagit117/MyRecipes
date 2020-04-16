@@ -60,6 +60,7 @@
   import ItemFotoRecipe from '@/components/ItemFotoRecipe.vue'
   import LoadFotoRecipes from '@/components/LoadFotoRecipes.vue'
   import EditFotoRecipe from '@/components/EditFotoRecipe.vue'
+  import lib from '@/lib/lib.js'
 	
 	export default {
 		components: {
@@ -82,7 +83,7 @@
 
 		created() {
 			this.loadFotorecipes(0);
-			this.typeShowList = (!this.getCookie('typeShowList')) ? 2 : parseInt(this.getCookie('typeShowList'));
+			this.typeShowList = (!lib.getCookie('typeShowList')) ? 2 : parseInt(lib.getCookie('typeShowList'));
 		},
 
 		methods: {
@@ -92,10 +93,6 @@
 			setTypeShowList(val) {
 				this.typeShowList = val;
 				this.$store.dispatch('setCookie', { name: 'typeShowList', value: val, delCookie: false } );
-			},
-			getCookie(name) {
-				let matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([.$?*|{}()[\]\\/+^])/g, '\\$1') + "=([^;]*)"));
-				return matches ? decodeURIComponent(matches[1]) : undefined;
 			},
 			loadFotorecipes(parent_id) {
 				this.$store.dispatch('loadFotorecipes', {

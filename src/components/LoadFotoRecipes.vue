@@ -2,7 +2,9 @@
   <div class="loadFotoRecipes">
     <LoadFoto :autoLoad="true" 
               @input-file="getImage"
-              ref="loadFoto" />
+              ref="loadFoto" 
+              :multiple="true"
+              :showImg="true" />
     <div class="item">
       <ShowCategory ref="listCategories" :showAddBtn="true" :cat_id="0" />
     </div>

@@ -29,13 +29,13 @@
 		}
 
 		$id = $_GET['id'];
-		$author_id = getAuthorFoto($id);
+    $author_id = getAuthorFoto($id);
+    
 		$rule = getUser("id", intval($_COOKIE['id']))[0]->rule;
-
 		if ($rule != "extra_user" and $author_id != intval($_COOKIE['id'])) {
 			$res->errorCode = 4;
 			$res->errorText = "Отказано в доступе! Роль доступа: $rule";
-			echo json_encode($res);
+			exit(json_encode($res));
 		}
 
 		$path_img = deleteFoto($id);

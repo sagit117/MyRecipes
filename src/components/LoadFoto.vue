@@ -1,19 +1,20 @@
 <template>
   <div class="loadFoto">
-    <div class="btn" v-if="isHidden">
-      <button title="Загрузить новый рецепт" 
-              @click="clickLoad" >Загрузить</button>
+    <div class="btn" :class="{ isVisible: hiddenBtn }">
+      <button title="Загрузить фото" 
+              @click="clickLoad" 
+              ref="btnLoad">Загрузить</button>
     </div>
     <input  type="file" 
             name="fileFoto" 
-            multiple 
+            :multiple="multiple"
             ref="inputFile"
             accept="image/jpeg, image/png, image/gif, image/jpg" 
             v-on:change="upLoad"
             :class="{ isVisible : isHidden }" />
-    <div class="imgList">
+    <div class="imgList" v-if="showImg">
       <div v-for="(img, index) in images" :key="index" class="imgDiv">
-        <img :src="img" @click="setOrder(index)"/>
+        <img :src="img" @click="setOrder(index)" />
         <div v-if="order.indexOf(index) != -1" class="order">{{ order.indexOf(index)+1 }}</div>
       </div>
     </div>
@@ -29,12 +30,15 @@
   export default {
 
     props: {
-      autoLoad: Boolean,
+      autoLoad: Boolean,  // активирует автозагрузку
+      hiddenBtn: Boolean, // скрывает кнопку загрузки фото
+      multiple: Boolean,  // загрузка одного файла, если true загрузка множества файлов multiple
+      showImg: Boolean,   // скрывает отображение загруженных фото
     },
 
     data() {
       return {
-        isHidden: true,
+        isHidden: true,   // скрывает кнопку по умолчанию для загрузки фото
         images: [],
         compressImg: [],
         order: [],
@@ -118,10 +122,6 @@
 </script>
 
 <style scoped>
-
-  .loadFoto {
-
-  }
   
   .isVisible {
     display: none;
