@@ -5,6 +5,13 @@
   /* 04.2020 */
   /* sagit117@gmail.com */
 
+  // getAuthorFotoRecipes   - получить ИД автора фото рецепта
+  // saveFotoRecipes        - сохранить фото рецепт
+  // getFotoRecipes         - получить список фото рецептов по ИД групп, ИД автора, страница * лимит, лимит, диет
+  // getAuthorFoto          - получить ИД автора фото по ИД фото
+  // deleteFoto             - удалить фото по ИД фото
+  // updateFotoRecipe       - обновить фото рецепт
+
   require 'connect.php';
 
   class DataRecipes {
@@ -24,6 +31,7 @@
   }
 
   function saveFotoRecipes($arrImg, $name, $parent_id, $author_id, $diet) {
+    // сохранить фото рецепт
     global $link;
     $parent_id = intval($parent_id);
     $name = mysqli_real_escape_string($link, $name);
@@ -48,6 +56,7 @@
   }
 
   function getFotoRecipes($parent_id, $author_id, $page, $diet, $limit) {
+    // получить список фото рецептов по ИД групп, ИД автора, страница * лимит, лимит, диет
     global $link;
     $parent_id = intval($parent_id);
     $author_id = intval($author_id);
@@ -97,11 +106,21 @@
   function getAuthorFoto($id) {
     // Получить ИД автора фото по ИД записи
     global $link;
+    $id = intval($id);
     $result = mysqli_query($link, "SELECT `author_id` FROM `img_foto_recipes` WHERE `id`='$id' LIMIT 1");
     return intval(mysqli_fetch_row($result)[0]);
   }
 
+  function getAuthorFotoRecipes($id) {
+    // Получить ИД автора фото рецепта
+    global $link;
+    $id = intval($id);
+    $result = mysqli_query($link, "SELECT `author_id` FROM `foto_recipes` WHERE `id`='$id' LIMIT 1");
+    return intval(mysqli_fetch_row($result)[0]);
+  }
+
   function deleteFoto($id) {
+    // удалить фото из фото рецепта
     global $link;
     $id = intval($id);
 
@@ -114,6 +133,10 @@
     } else {
       return 0;
     }
+  }
+
+  function updateFotoRecipe($id, $name, $parent_id, $diet) {
+    // Обновить фото рецепт
   }
 
 ?>

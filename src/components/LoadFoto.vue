@@ -15,7 +15,7 @@
     <div class="imgList" v-if="showImg">
       <div v-for="(img, index) in images" :key="index" class="imgDiv">
         <img :src="img" @click="setOrder(index)" />
-        <div v-if="order.indexOf(index) != -1" class="order">{{ order.indexOf(index)+1 }}</div>
+        <div v-if="order.indexOf(index) !== -1" class="order">{{ order.indexOf(index)+1 }}</div>
       </div>
     </div>
   </div>

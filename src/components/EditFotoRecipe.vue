@@ -3,7 +3,10 @@
 
     <div class="imgList">
 			<div v-for="(img, index) in recipe.img" :key="img.id" class="imgItem">
-				<img :src="path + img.path_img" ref="imgView">
+				<img :src="path + img.path_img" ref="imgView" @click.stop="setOrder(index)">
+        <div v-if="order.indexOf(index) !== -1" class="order">
+          {{ order.indexOf(index)+1 }}
+        </div>
         <LoadFoto
           :autoLoad="false" 
           @input-file="(arr) => { getImage(arr, index) }"
@@ -29,7 +32,16 @@
       @input-file="getImageMultiple"
       :multiple="true"
       ref="loadFoto" 
-      :showImg="true" />
+      :showImg="false" />
+
+    <div class="imgList">
+			<div v-for="(img, index) in addImg" :key="index" class="imgItem">
+        <img :src="img" ref="imgView" @click="setOrder(index+recipe.img.length)">
+        <div v-if="order.indexOf(index+recipe.img.length) !== -1" class="order">
+          {{ order.indexOf(index+recipe.img.length)+1 }}
+        </div>
+			</div>
+    </div>
 
 		<ShowCategory ref="listCategories" :showAddBtn="true" :id_cat="parseInt(recipe.parent_id)"/>
 
@@ -50,7 +62,7 @@
 		<span class="errorText">{{ errorText }}</span>
 
 		<div class='item'>
-			<button>Сохранить</button>
+			<button @click="save">Сохранить</button>
 		</div>
 	</div>
 </template>
@@ -83,6 +95,8 @@
 				errorText: '',
         path: this.$store.getters.getDomainName,
         newImg: [],
+        addImg: [],
+        order: [],
 			}
 		},
 
@@ -102,7 +116,6 @@
             // удалить фото из массива новых фото
             if (this.newImg.length > index) {
               this.newImg.splice(index, 1);
-              console.log(this.newImg);
             }
           })
           .catch(() => {
@@ -128,10 +141,56 @@
         this.newImg[index] = arr[0];            // добавление фото в массив новых фото
       },
       getImageMultiple(arr) {
-        console.log(arr);
+        this.addImg = arr;
       },
-    },
+      save() {
+        // сохранить
+        this.minLength();
+        if (this.isError) return;
+        /*  
+          собрать массив из изменненных фото и id от старых
+          добавить в массив новый массив из новых фото с id 0
+          отсортировать по order
+          полученный массив передать в бэкенд
+        */
 
+        // Собрать массив из всех фото
+        let arr = [];
+        for (let i=0; i<this.recipe.img.length; i++) {
+          if (this.newImg[i] !== undefined) {
+            arr.push({ id: this.recipe.img[i].id, img: this.newImg[i], new: true });
+          } else {
+            arr.push({ id: this.recipe.img[i].id, img: this.recipe.img[i].path_img, new: false });
+          }
+        }
+        for (let i=0; i<this.addImg.length; i++) {
+          arr.push({ id: 0, img: this.addImg[i], new: true });
+        }
+
+        // сортировать полученный массив по массиву order
+        let orderImg = [];
+        for (let i=0; i<this.order.length; i++) {
+          orderImg.push(arr[this.order[i]]);
+        }
+
+        for (let i=0; i<arr.length; i++) {
+          if (orderImg.indexOf(arr[i]) === -1) orderImg.push(arr[i]);
+        }
+
+        this.$store.dispatch('updateFotoRecipe', { 
+          id: this.recipe.id,
+          name: this.nameRecipe,
+          diet: (this.diet) ? 1 : 0,
+          parent_id: this.$refs.listCategories.$refs.listCategories.value,
+          images: orderImg
+         });
+      },
+      setOrder(index) {
+        let ind = this.order.indexOf(index);
+        (ind == -1) ? this.order.push(index) : this.order.splice(ind, 1);
+      },
+
+    },
 
 	}
 </script>
@@ -213,6 +272,19 @@
   .item {
 		padding-top: 5px;
 		padding-bottom: 5px;
+  }
+
+  .order {
+    position: absolute;
+    right: calc(50% - 10px);
+    top: 10px;
+    width: 20px;
+    height: 20px;
+    font-weight: 700;
+    border-radius: 50%;
+    text-align: center;
+    background-color: white;
+    box-shadow: 2px 2px 2px #000;
   }
 
   input[type=checkbox] {

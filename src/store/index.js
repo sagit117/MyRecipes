@@ -438,6 +438,34 @@ export default new Vuex.Store({
         });
       });
     },
+    async updateFotoRecipe(context, data) { // изменить фото рецепт
+      let formData = new FormData();
+      formData.append('id', data.id);
+      formData.append("name", data.name);
+      formData.append("parent_id", data.parent_id);
+      formData.append("diet", data.diet);
+
+      for (let i=0; i < data.images.length; i++) {
+        formData.append(`img[${i}]`, data.images[i]);
+      }
+
+      context.commit("setShowWait", true);
+      
+      axios.post(this.state.domainName + 'api/updateFotoRecipes.php', formData, 
+          /*{ headers: {'Content-Type': 'multipart/form-data'}*/
+          { headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+      })
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        // Проблемы на линии
+        console.log(error);
+        let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
+        context.commit('setShowAlert', alert);
+        context.commit("setShowWait", false);
+      });
+    }
   },
 
   getters: {
