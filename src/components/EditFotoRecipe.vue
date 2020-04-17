@@ -89,8 +89,8 @@
 
 		data() {
 			return {
-				diet: false,
-				nameRecipe: '',
+				diet: this.recipe.diet,
+				nameRecipe: this.recipe.name,
 				isError: false,
 				errorText: '',
         path: this.$store.getters.getDomainName,

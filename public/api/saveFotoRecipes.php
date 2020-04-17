@@ -35,8 +35,8 @@
 
     $rule = getUser("id", intval($_COOKIE['id']))[0]->rule;
     if ($rule != "extra_user" and $author_id != intval($_COOKIE['id'])) {
-      $res->errorText = "Отказано в доступе! Роль доступа: $rule, id_post: $id, id_cookie=".intval($_COOKIE['id']);
-      exit(son_encode($res));
+      $res->errorText = "Отказано в доступе! Роль доступа: $rule";
+      exit(json_encode($res));
     }
 
     $arrImg = (!isset($_POST['fileFoto'])) ? saveImageFiles($_FILES) : saveImage($_POST['fileFoto']);

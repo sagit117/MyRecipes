@@ -444,10 +444,7 @@ export default new Vuex.Store({
       formData.append("name", data.name);
       formData.append("parent_id", data.parent_id);
       formData.append("diet", data.diet);
-
-      for (let i=0; i < data.images.length; i++) {
-        formData.append(`img[${i}]`, data.images[i]);
-      }
+      formData.append('img', JSON.stringify(data.images));
 
       context.commit("setShowWait", true);
       

@@ -11,6 +11,7 @@
   // getAuthorFoto          - получить ИД автора фото по ИД фото
   // deleteFoto             - удалить фото по ИД фото
   // updateFotoRecipe       - обновить фото рецепт
+  // getArrayFotoID         - получить массив ИД фото
 
   require 'connect.php';
 
@@ -137,6 +138,30 @@
 
   function updateFotoRecipe($id, $name, $parent_id, $diet) {
     // Обновить фото рецепт
+    global $link;
+    $id = intval($id);
+    $name = mysqli_real_escape_string($link, $name);
+    $parent_id = intval($parent_id);
+    $diet = intval($diet);
+
+    mysqli_query($link, "UPDATE `foto_recipes` SET  `name`='$name', 
+                                                    `parent_id`='$parent_id', 
+                                                    `diet`='$diet' WHERE `id`='$id'") or die(mysqli_error($link));
+    return true;
+  }
+
+  function getArrayFotoID($id) {
+    // получить массив ИД фото
+    global $link;
+    $id = intval($id);
+    $arr = array();
+
+    $result = mysqli_query($link, "SELECT `id` FROM `img_foto_recipes` WHERE `parent_id`='$id'");
+    while ($img = mysqli_fetch_assoc($result)) {
+      array_push($arr, $img['id']);
+    }
+
+    return $arr;
   }
 
 ?>

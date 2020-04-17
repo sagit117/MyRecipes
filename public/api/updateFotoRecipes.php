@@ -35,11 +35,24 @@
 
     $rule = getUser("id", intval($_COOKIE['id']))[0]->rule;
     if ($rule !== "extra_user" and getAuthorFotoRecipes($id) !== intval($_COOKIE['id'])) {
-      $res->errorText = "Отказано в доступе! Роль доступа: $rule, id_post: $id, id_cookie=".intval($_COOKIE['id']);
-      exit(son_encode($res));
+      $res->errorText = "Отказано в доступе! Роль доступа: $rule";
+      exit(json_encode($res));
     }
 
-    
+    updateFotoRecipe($id, $name, $parent_id, $diet);
+
+    $arrImg = json_decode($_POST['img']); // массив объектов для фото
+    $arrImgID = getArrayFotoID($id);
+
+    $count = 0;
+    foreach ($arrImg as $img) {
+      if ($img->new) {
+        $fileName = saveImage(array($img->img))[0]->image_name;
+        
+      }
+      $count++;
+    }
+
   }
 
 ?>
