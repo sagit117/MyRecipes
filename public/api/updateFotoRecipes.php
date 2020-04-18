@@ -42,13 +42,20 @@
     updateFotoRecipe($id, $name, $parent_id, $diet);
 
     $arrImg = json_decode($_POST['img']); // массив объектов для фото
-    $arrImgID = getArrayFotoID($id);
+    $arrDataImg = getArrayFoto($id);
 
     $count = 0;
     foreach ($arrImg as $img) {
-      if ($img->new) {
-        $fileName = saveImage(array($img->img))[0]->image_name;
-        
+      if ($img->new) {                                                    // если пометка, что файл новый
+        $fileName = saveImage(array($img->img))[0]->image_name;           // создать файл на сервере
+
+        if (intval($img->id) > 0) {                                       // если ИД > 0 значить файл записан поверх имеющегося
+          foreach ($arrDataImg as $dataImg) {                             // поиск по массиву со старыми значениями фото
+            if ($dataImg->id == $img->id) deleteImg($dataImg->path_img);  // если найдено старое фото, тогда его удалить
+          }
+        }
+
+        // записать новые данные в БД по верх старых
       }
       $count++;
     }
