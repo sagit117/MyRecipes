@@ -9,7 +9,7 @@
             name="fileFoto" 
             :multiple="multiple"
             ref="inputFile"
-            accept="image/jpeg, image/png, image/gif, image/jpg" 
+            accept="image/jpeg, image/png, image/jpg" 
             v-on:change="upLoad"
             :class="{ isVisible : isHidden }" />
     <div class="imgList" v-if="showImg">
@@ -99,13 +99,17 @@
             ctx.drawImage(img, 0, 0, elem.width, elem.height);
                         
             if (elem.toDataURL("image/png", 1.0).length > 6074) {
-              self.compressImg.push(elem.toDataURL("image/png", 1.0));
-              clearInterval(int);
+              self.compressImg.push(elem.toDataURL("image/png", 1.0)); 
+            } else {
+              console.log('фото не получилось сжать! ');
+              self.compressImg.push(file);
+            }
 
-              if (self.compressImg.length === self.images.length) {
-                self.$emit("input-file", self.compressImg);
-                self.$store.commit("setShowWait", false);
-              }
+            if (self.compressImg.length === self.images.length) {
+              self.$store.commit("setShowWait", false);
+              clearInterval(int);
+              self.$emit("input-file", self.compressImg);
+              self.$store.commit("setShowWait", false);
             }
           }, 1000);
         };

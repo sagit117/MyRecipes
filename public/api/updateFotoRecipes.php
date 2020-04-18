@@ -13,18 +13,16 @@
 	require 'fotoRecipes.php';
   require 'login.php';
   
-  class ResponseSR {
-		public $id = 0;
-		public $count_error_img = 0;
+  class ResponseFR {
 		public $errorText = '';
 	}
 
   if (isset($_POST['id'])) {
     // сохранить фото рецепт в базу
-    $response = new ResponseSR();
+    $res = new ResponseFR();
 
     if (!verifyUser($_COOKIE['id'])) { // проверка пользователя
-      $response->errorText = "Отказано в доступе!";
+      $res->errorText = "Отказано в доступе!";
       exit(json_encode($response)); 
     }
 
@@ -53,27 +51,27 @@
         if (intval($img->id) > 0) {                                       // если ИД > 0 значить файл записан поверх имеющегося
           foreach ($arrDataImg as $dataImg) {                             // поиск по массиву со старыми значениями фото
             if ($dataImg->id == $img->id) deleteImg($dataImg->path_img);  // если найдено старое фото, тогда его удалить
-          }
-
-          // записать новые данные в БД по верх старых
-          if ($count < count($arrDataImg)) {
-            updateImgRecords($arrDataImg[$count]->id, $fileName);
-          } else {
-            createImgRecords($id, $fileName, $author_id);
-          }
+          }  
+        }
+        
+        // записать новые данные в БД по верх старых
+        if ($count < count($arrDataImg)) {
+          updateImgRecords($arrDataImg[$count]->id, $fileName);
+        } else {
+          createImgRecords($id, $fileName, $author_id);
         }
       } else {
         // записать новые данные в БД по верх старых
         if ($count < count($arrDataImg)) {
-          updateImgRecords($arrDataImg[$count]->id, $arrDataImg[$count]->path_img);
+          updateImgRecords($arrDataImg[$count]->id, $img->img);
         } else {
-          createImgRecords($id, $arrDataImg[$count]->path_img, $author_id);
+          createImgRecords($id, $img->img, $author_id);
         }
       }
 
       $count++;
     }
-
+    echo json_encode($res);
   }
 
 ?>

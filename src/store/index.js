@@ -439,30 +439,43 @@ export default new Vuex.Store({
       });
     },
     async updateFotoRecipe(context, data) { // изменить фото рецепт
-      let formData = new FormData();
-      formData.append('id', data.id);
-      formData.append("name", data.name);
-      formData.append("parent_id", data.parent_id);
-      formData.append("diet", data.diet);
-      formData.append('img', JSON.stringify(data.images));
+      return new Promise((resolve, reject) => {
+        let formData = new FormData();
+        formData.append('id', data.id);
+        formData.append("name", data.name);
+        formData.append("parent_id", data.parent_id);
+        formData.append("diet", data.diet);
+        formData.append('img', JSON.stringify(data.images));
 
-      context.commit("setShowWait", true);
+        context.commit("setShowWait", true);
       
-      axios.post(this.state.domainName + 'api/updateFotoRecipes.php', formData, 
+        axios.post(this.state.domainName + 'api/updateFotoRecipes.php', formData, 
           /*{ headers: {'Content-Type': 'multipart/form-data'}*/
           { headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-      })
-      .then(function (response) {
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        // Проблемы на линии
-        console.log(error);
-        let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
-        context.commit('setShowAlert', alert);
-        context.commit("setShowWait", false);
+        })
+        .then(function (response) {
+          context.commit("setShowWait", false);
+          if (response.errorText === '') {
+            let alert = {show: true, caption: "Успешно", text: "Данные сохранены.", type: 3};
+            context.commit('setShowAlert', alert);
+            resolve();
+          } else {
+            let alert = {show: true, caption: "Ошибка!", text: response.errorText, type: 1};
+            context.commit('setShowAlert', alert);
+            reject();
+          }
+        })
+        .catch(function (error) {
+          // Проблемы на линии
+          console.log(error);
+          let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
+          context.commit('setShowAlert', alert);
+          context.commit("setShowWait", false);
+          reject();
+        });
       });
-    }
+    },
+
   },
 
   getters: {

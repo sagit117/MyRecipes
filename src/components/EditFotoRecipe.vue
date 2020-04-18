@@ -89,7 +89,7 @@
 
 		data() {
 			return {
-				diet: this.recipe.diet,
+				diet: (parseInt(this.recipe.diet) === 1) ? true: false,
 				nameRecipe: this.recipe.name,
 				isError: false,
 				errorText: '',
@@ -183,7 +183,10 @@
           diet: (this.diet) ? 1 : 0,
           parent_id: this.$refs.listCategories.$refs.listCategories.value,
           images: orderImg
-         });
+         })
+         .then(() => {
+           this.$emit('close');
+         })
       },
       setOrder(index) {
         let ind = this.order.indexOf(index);
