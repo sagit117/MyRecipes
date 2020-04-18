@@ -100,16 +100,16 @@
                         
             if (elem.toDataURL("image/png", 1.0).length > 6074) {
               self.compressImg.push(elem.toDataURL("image/png", 1.0)); 
+              clearInterval(int);
             } else {
               console.log('фото не получилось сжать! ');
               self.compressImg.push(file);
+              clearInterval(int);
             }
 
             if (self.compressImg.length === self.images.length) {
               self.$store.commit("setShowWait", false);
-              clearInterval(int);
               self.$emit("input-file", self.compressImg);
-              self.$store.commit("setShowWait", false);
             }
           }, 1000);
         };

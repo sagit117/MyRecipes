@@ -455,12 +455,12 @@ export default new Vuex.Store({
         })
         .then(function (response) {
           context.commit("setShowWait", false);
-          if (response.errorText === '') {
+          if (response.data.errorText === '') {
             let alert = {show: true, caption: "Успешно", text: "Данные сохранены.", type: 3};
             context.commit('setShowAlert', alert);
             resolve();
           } else {
-            let alert = {show: true, caption: "Ошибка!", text: response.errorText, type: 1};
+            let alert = {show: true, caption: "Ошибка!", text: response.data.errorText, type: 1};
             context.commit('setShowAlert', alert);
             reject();
           }
