@@ -37,7 +37,7 @@
     return $arr;
   }
 
-  function saveImageFiles($file) {
+  function saveImageFiles($file) { // #не используется
     // для сохранения из массива $_FILES
     $uploads_dir = 'uploads/';
     $arr = array();

@@ -32,9 +32,10 @@
     $name = $_POST['name'];
     $parent_id = intval($_POST['parent_id']);
     $diet = intval($_POST['diet']);
+    $author_id = getAuthorFotoRecipes($id);
 
     $rule = getUser("id", intval($_COOKIE['id']))[0]->rule;
-    if ($rule !== "extra_user" and getAuthorFotoRecipes($id) !== intval($_COOKIE['id'])) {
+    if ($rule !== "extra_user" and $author_id !== intval($_COOKIE['id'])) {
       $res->errorText = "Отказано в доступе! Роль доступа: $rule";
       exit(json_encode($res));
     }
@@ -53,10 +54,23 @@
           foreach ($arrDataImg as $dataImg) {                             // поиск по массиву со старыми значениями фото
             if ($dataImg->id == $img->id) deleteImg($dataImg->path_img);  // если найдено старое фото, тогда его удалить
           }
-        }
 
+          // записать новые данные в БД по верх старых
+          if ($count < count($arrDataImg)) {
+            updateImgRecords($arrDataImg[$count]->id, $fileName);
+          } else {
+            createImgRecords($id, $fileName, $author_id);
+          }
+        }
+      } else {
         // записать новые данные в БД по верх старых
+        if ($count < count($arrDataImg)) {
+          updateImgRecords($arrDataImg[$count]->id, $arrDataImg[$count]->path_img);
+        } else {
+          createImgRecords($id, $arrDataImg[$count]->path_img, $author_id);
+        }
       }
+
       $count++;
     }
 

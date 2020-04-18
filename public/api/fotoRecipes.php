@@ -12,6 +12,8 @@
   // deleteFoto             - удалить фото по ИД фото
   // updateFotoRecipe       - обновить фото рецепт
   // getArrayFotoID         - получить массив фото
+  // updateImgRecords       - перезаписать запись с фото от оторецепта
+  // createImgRecords       - создать запись с фото для фото рецепта
 
   require 'connect.php';
 
@@ -46,14 +48,22 @@
     if ($id > 0) {
     	foreach ($arrImg as $key => $value) {
     		$image_name = $value->image_name;
-    		if ($value->errorText == 0) {
-    			mysqli_query($link, "INSERT INTO 	`img_foto_recipes` (`parent_id`, `path_img`, `author_id`) 
-    											VALUES 	('$id', '$image_name', '$author_id')");
-    			}
-    		}
+    		if ($value->errorText == 0) createImgRecords($id, $image_name, $author_id);
     	}
+    }
 
     return $id;
+  }
+
+  function createImgRecords($parent_id, $path_img, $author_id) {
+    // создать запись с фото для фото рецепта
+    global $link;
+    $parent_id = intval($parent_id);
+    $path_img = mysqli_real_escape_string($link, $path_img);
+    $author_id = intval($author_id);
+
+    mysqli_query($link, "INSERT INTO 	`img_foto_recipes` (`parent_id`, `path_img`, `author_id`) 
+    											VALUES 	('$parent_id', '$path_img', '$author_id')");
   }
 
   function getFotoRecipes($parent_id, $author_id, $page, $diet, $limit) {
@@ -165,6 +175,15 @@
     }
 
     return $arr;
+  }
+
+  function updateImgRecords($id, $fileName) {
+    // перезаписать запись с фото от оторецепта
+    global $link;
+    $id = intval($id);
+    $fileName = mysqli_real_escape_string($link, $fileName);
+
+    mysqli_query($link, "UPDATE `img_foto_recipes` SET `path_img`='$fileName' WHERE `id`='$id'");
   }
 
 ?>
