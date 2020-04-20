@@ -7,23 +7,33 @@
 			</div>
 			<hr>
 
-			<div class="MenuFotoRecipes">
-				<div class="menuItem">
-					<ShowCategory ref='listCategories' @change-group="changeGroup" :cat_id="0" />
-				</div>
-				<div class="menuItem">
-					<label><input type="checkbox" v-model="diet" @change="clickDiet">Только диетическое</label>
-				</div>
-				<div 	class="menuItem" 
-							v-if="typeShowList === 2"
+			<div class="MenuFotoRecipes"> 
+        <div class="menuItem">
+          <img src="ico/HAMBURGER MENU.svg" title="Фильтры" @click.stop="showFilterMenu = !showFilterMenu">
+        </div>
+
+        <ul class="menuFilter" v-if="showFilterMenu">
+          <div class="close" title="Закрыть" @click="showFilterMenu = !showFilterMenu">
+            &#215;
+          </div>
+          <h3> Фильтры </h3>
+
+          <li>
+            <ShowCategory ref='listCategories' @change-group="changeGroup" :cat_id="0" />
+          </li>
+          <li>
+            <label><input type="checkbox" v-model="diet" @change="clickDiet">Только диетическое</label>
+          </li>
+          <li v-if="typeShowList === 2"
 							@click="setTypeShowList(1)">
-					<button>Показать в виде строк</button>
-				</div>
-				<div 	class="menuItem" 
-							v-else
+            <button>Показать в виде строк</button>
+          </li>
+          <li v-else
 							@click="setTypeShowList(2)">
-					<button>Показать в виде кубов</button>
-				</div>
+            <button>Показать в виде кубов</button>
+          </li>
+        </ul>
+
 			</div>
 
 			<div class="listFotoRecipes" v-if="typeShowList === 1">
@@ -77,7 +87,8 @@
 				page: 1,
 				showRow: [],
 				state: 1,
-				edit_recipe: {},
+        edit_recipe: {},
+        showFilterMenu: false,
 			}
 		},
 
@@ -141,16 +152,21 @@
 		height: 40px;
 	}
 
-	hr {
-		margin-left: 15px;
-		margin-right: 15px;
-	}
-
 	.MenuFotoRecipes {
 		display: flex;
 		margin-right: 15px;
 		margin-left: 15px;
+    position: relative;
 	}
+
+  .menuItem {
+		display: flex;
+		/*justify-content: center;*/
+		align-items: center;
+	}
+  .menuItem > img {
+    cursor: pointer;
+  }
 
 	.itemRecipe {
 		padding-left: 10px;
@@ -164,23 +180,45 @@
 		display: block;
 	}
 
-	.menuItem {
-		display: flex;
-		justify-content: center;
-		align-items: center;
+  .listFotoRecipes {
+		margin-left: 15px;
+		margin-right: 15px;
 	}
+
+  .menuFilter {
+    position: absolute;
+    top: 30px;
+    list-style: none;
+    background-color: white;
+    z-index: 99;
+    text-align: left;
+    box-shadow: 2px 2px 4px #000;
+  }
+  .menuFilter > li {
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+  }
+  .menuFilter > li:last-child {
+    border-bottom: none;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+  }
+  .menuFilter > li > button {
+    margin-left: 0px;
+  }
 
 	input[type=checkbox] {
 		cursor: pointer;
 		margin-right: 5px;
-		margin-left: 15px;
+		/*margin-left: 15px;*/
 		width: 20px;
 		height: 20px;
 	}
 
 	label {
 		display: flex;
-		justify-content: center;
+		/*justify-content: center;*/
 		align-items: center;
 		cursor: pointer;
 	}
@@ -189,17 +227,17 @@
 		margin-left: 15px;
 		height: auto;
 	}
-
-	.listFotoRecipes {
+	
+  hr {
 		margin-left: 15px;
 		margin-right: 15px;
 	}
 
 @media (min-width: 100px) and (max-width: 610px) {
-	.MenuFotoRecipes {
+	/*.MenuFotoRecipes {
 		flex-wrap: wrap;
 		justify-content: center;
 		align-items: center;
-	}
+	}*/
 }
 </style>
