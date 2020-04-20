@@ -453,7 +453,7 @@ export default new Vuex.Store({
           /*{ headers: {'Content-Type': 'multipart/form-data'}*/
           { headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         })
-        .then(function (response) {
+        .then(function(response) {
           context.commit("setShowWait", false);
           if (response.data.errorText === '') {
             let alert = {show: true, caption: "Успешно", text: "Данные сохранены.", type: 3};
@@ -475,7 +475,22 @@ export default new Vuex.Store({
         });
       });
     },
+    async addFavoriteFotorecipe(context, data) { // добавить фото рецепт в избранное
+      context.commit("setShowWait", true);
 
+      axios.get(this.state.domainName + 'api/addFavoriteFotoRecipe.php?id_user=' + data.id_user + '&id_recipe=' + data.id_recipe)
+      .then(function(response) {
+        context.commit("setShowWait", false);
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        // Проблемы на линии
+        console.log(error);
+        let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
+        context.commit('setShowAlert', alert);
+        context.commit("setShowWait", false);
+      });
+    }
   },
 
   getters: {

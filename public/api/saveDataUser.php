@@ -1,17 +1,16 @@
 <?php
 	/* MyRecipes */
-    /* version: 0.0.2 */
-    /* author: Aksenov Pavel */
-    /* 04.2020 */
-    /* sagit117@gmail.com */
+  /* version: 0.0.2 */
+  /* author: Aksenov Pavel */
+  /* 04.2020 */
+  /* sagit117@gmail.com */
 
-    header("Access-Control-Allow-Origin: *");
+  header("Access-Control-Allow-Origin: *");
 	header("Access-Control-Allow-Methods: POST,GET");
 	header("Access-Control-Allow-Headers: *");
 
-	//require 'connect.php';
-    require_once 'user.php';
-    require 'login.php';
+  require_once 'user.php';
+  require 'login.php';
 
 	class Response {
 		public $errorCode = 0;
@@ -32,7 +31,7 @@
 
 		if ($rule != "extra_user" and $id != intval($_COOKIE['id'])) {
 			$res->errorCode = 1;
-			$res->errorText = "Отказано в доступе! Роль доступа: $rule, id_post: $id, id_cookie=".intval($_COOKIE['id']);
+			$res->errorText = "Отказано в доступе! Роль доступа: $rule";
 			echo json_encode($res);
 		} else {
 			if (isset($_POST['name'])) $name = updateUser("name", $_POST['name'], "id", $id);
@@ -42,7 +41,7 @@
 			echo json_encode($res);
 		}
 	} else {
-	    $res->errorCode = 2;
+	  $res->errorCode = 2;
 		$res->errorText = "Нет запроса!";
 		echo json_encode($res);
 	}

@@ -14,6 +14,7 @@
   // getArrayFotoID         - получить массив фото
   // updateImgRecords       - перезаписать запись с фото от оторецепта
   // createImgRecords       - создать запись с фото для фото рецепта
+  // addFavoriteFotoRecipe  - добавить рецепт в избранное
 
   require 'connect.php';
 
@@ -184,6 +185,16 @@
     $fileName = mysqli_real_escape_string($link, $fileName);
 
     mysqli_query($link, "UPDATE `img_foto_recipes` SET `path_img`='$fileName' WHERE `id`='$id'");
+  }
+
+  function addFavoriteFotoRecipe($id_user, $id_recipe) {
+    // добавить рецепт в избранное
+    global $link;
+    $id_recipe = intval($id_recipe);
+    $id_user = intval($id_user);
+
+    mysqli_query($link, "INSERT INTO `favorite_foto_recipes` (`id_recipes`, `id_user`) 
+      VALUES ('$id_recipe', '$id_user')");
   }
 
 ?>

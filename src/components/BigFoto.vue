@@ -164,11 +164,16 @@
     .score {
         position: absolute;
         bottom: 0;
-        left: 0;
-        right: 0;
+        width: 100px;
+        margin: 0 auto;
+        left: calc(50% - 50px);
         text-align: center;
         vertical-align: middle;
         padding-bottom: 3px;
+        background-color: rgb(0, 0, 0);
+        color: white;
+        font-weight: bold;
+        border-radius: 15px;
     }
 
     .rotate {

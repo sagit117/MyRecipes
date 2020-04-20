@@ -13,6 +13,9 @@
 		<a 	class="left" 
 				title="Предыдущее фото" 
 				@click.stop="setPosition(-1)"> ❮ </a>
+    <div class="menu">
+      <img src="ico/heart.png" title="В избранное" @click.stop="addFavorite">
+    </div>
 	</div>
 </template>
 
@@ -44,7 +47,11 @@
 			},
 			showBigFoto() {
 				this.$store.commit("setShowBigFoto", { show: true, arrayImg: this.recipe.img, position_img: this.position });
-			},
+      },
+      addFavorite() {
+        // добавить в избранное
+        this.$store.dispatch("")
+      }
 		},
 
   }
@@ -54,13 +61,13 @@
 	.itemRecipeBlock {
 		position: relative;
 		cursor: pointer;
-		margin-top: 5px;
+		margin-top: 30px;
 		margin-right: 5px;
 		width: 272px;
 		height: 330px;
 		display: inline-block;
 		text-align: center;
-		overflow: hidden;
+		/*overflow: hidden;*/
 		padding: 5px;
 		background-color: #41444a;
 	}
@@ -135,4 +142,18 @@
 	.left:hover {
 		opacity: 1;
 	}
+
+  .menu {
+    display: flex;
+    position: absolute;
+    height: 25px;
+    top: -20px;
+    width: 272px;
+    cursor: default;
+  }
+  .menu > img {
+    height: 15px;
+    width: 15px;
+    cursor: pointer;
+  }
 </style>

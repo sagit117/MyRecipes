@@ -222,7 +222,7 @@
   .del {
 		position: absolute;
 		top: 10px;
-		right: 10px;
+		left: 10px;
   }
   .del > img {
 		width: 30px;
@@ -233,12 +233,12 @@
 
   .edit {
 		position: absolute;
-		top: 10px;
-		left: 0px;
+		top: 12px;
+		right: 0px;
 		width: 40px;
 		height: 25px;
-		border-top-right-radius: 5px;
-		border-bottom-right-radius: 5px;
+		border-top-left-radius: 5px;
+		border-bottom-left-radius: 5px;
 		line-height: 30px;
 		overflow: hidden;
 		color: black;
@@ -248,7 +248,7 @@
   .edit > img {
 		width: 20px;
 		height: 20px;
-		float: right;
+		float: left;
 		padding: 2px;
 		vertical-align: middle;
   }

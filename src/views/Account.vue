@@ -34,7 +34,8 @@
 								@input="inputPatronymic"
 								:class="{ isErr: errorType.patronymic }"
 								@keyup.enter="saveData"
-								placeholder="Введите отчество">
+								placeholder="Введите отчество"
+                autocomplete="off">
 			</div>
 			<button @click="saveData">Сохранить</button>
 
@@ -158,7 +159,7 @@
 			textError: function() {
 				if (this.errorType.name) return 'Необходимо заполнить корректное имя!';
 				if (this.errorType.surname) return 'Необходимо заполнить корректную фамилию!';
-				if (this.errorType.patronymic) return 'Необходимо заполнить корректную отчество!';
+				if (this.errorType.patronymic) return 'Необходимо заполнить корректное отчество!';
 				if (this.errorType.confirmPass) return 'Пароль и подтверждение не совпадают!';
 				if (this.errorType.newPass) return 'Пароль не должен быть пустым!';
 				return '';
