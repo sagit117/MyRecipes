@@ -15,6 +15,7 @@
   // updateImgRecords       - перезаписать запись с фото от оторецепта
   // createImgRecords       - создать запись с фото для фото рецепта
   // addFavoriteFotoRecipe  - добавить рецепт в избранное
+  // rmFavoriteFotoRecipe   - удалить рецепт из избранного
 
   require 'connect.php';
 
@@ -25,6 +26,7 @@
     public $author_id = 0;
     public $diet = 0;
     public $img = array();
+    public $fav = false;
   }
 
   class DataImg {
@@ -96,7 +98,13 @@
       $data->author_id = $recipes['author_id'];
       $data->diet = $recipes['diet'];
 
-      $resultImg = mysqli_query($link, "SELECT * FROM `img_foto_recipes` WHERE `parent_id`='".$data->id."'");
+      // узнаем добавлен рецепт в избранное или нет
+      $row = mysqli_query($link, "SELECT count(*) FROM `favorite_foto_recipes` 
+        WHERE `id_user`='$author_id' AND `id_recipe`='". $data->id ."' LIMIT 1");
+      if (mysqli_fetch_row($row)[0] > 0) $data->fav = true;
+
+      // получаем массив фото
+      $resultImg = mysqli_query($link, "SELECT * FROM `img_foto_recipes` WHERE `parent_id`='". $data->id ."'");
       while ($img = mysqli_fetch_assoc($resultImg)) {
         $dataImg = new DataImg();
         $dataImg->id = $img['id'];
@@ -193,8 +201,17 @@
     $id_recipe = intval($id_recipe);
     $id_user = intval($id_user);
 
-    mysqli_query($link, "INSERT INTO `favorite_foto_recipes` (`id_recipes`, `id_user`) 
+    mysqli_query($link, "INSERT INTO `favorite_foto_recipes` (`id_recipe`, `id_user`) 
       VALUES ('$id_recipe', '$id_user')");
+    return mysqli_insert_id($link);
   }
 
+  function rmFavoriteFotoRecipe($id_user, $id_recipe) {
+    // удалить рецепт из избранного
+    global $link;
+    $id_recipe = intval($id_recipe);
+    $id_user = intval($id_user);
+
+    mysqli_query($link, "DELETE FROM `favorite_foto_recipes` WHERE `id_recipe`='$id_recipe' AND `id_user`='$id_user'");
+  }
 ?>

@@ -38,14 +38,8 @@
 			exit(json_encode($res));
     }
 
-    $id = addFavoriteFotoRecipe($id_user, $id_recipe);
-    if ($id > 0) {
-      exit(json_encode($res));
-    } else {
-      $res->errorCode = 2;
-		  $res->errorText = "Не удалось создать запись!";
-		  exit(json_encode($res));
-    }
+    rmFavoriteFotoRecipe($id_user, $id_recipe);
+		exit(json_encode($res));
   }
 
 ?>

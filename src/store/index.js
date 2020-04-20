@@ -476,21 +476,55 @@ export default new Vuex.Store({
       });
     },
     async addFavoriteFotorecipe(context, data) { // добавить фото рецепт в избранное
-      context.commit("setShowWait", true);
+      return new Promise((resolve, reject) => {
+        context.commit("setShowWait", true);
 
-      axios.get(this.state.domainName + 'api/addFavoriteFotoRecipe.php?id_user=' + data.id_user + '&id_recipe=' + data.id_recipe)
-      .then(function(response) {
-        context.commit("setShowWait", false);
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        // Проблемы на линии
-        console.log(error);
-        let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
-        context.commit('setShowAlert', alert);
-        context.commit("setShowWait", false);
+        axios.get(this.state.domainName + 'api/addFavoriteFotoRecipe.php?id_user=' + data.id_user + '&id_recipe=' + data.id_recipe)
+        .then(function(response) {
+          context.commit("setShowWait", false);
+          if (response.data.errorCode == 0) {
+            resolve();
+          } else {
+            let alert = {show: true, caption: "Ошибка!", text: response.data.errorText, type: 1};
+            context.commit('setShowAlert', alert);
+            reject();
+          }
+        })
+        .catch(function (error) {
+          // Проблемы на линии
+          console.log(error);
+          let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
+          context.commit('setShowAlert', alert);
+          context.commit("setShowWait", false);
+          reject();
+        });
       });
-    }
+    },
+    async rmFavoriteFotorecipe(context, data) { // удалить рецепт из избранного
+      return new Promise((resolve, reject) => {
+        context.commit("setShowWait", true);
+
+        axios.get(this.state.domainName + 'api/rmFavoriteFotoRecipe.php?id_user=' + data.id_user + '&id_recipe=' + data.id_recipe)
+        .then(function(response) {
+          context.commit("setShowWait", false);
+          if (response.data.errorCode == 0) {
+            resolve();
+          } else {
+            let alert = {show: true, caption: "Ошибка!", text: response.data.errorText, type: 1};
+            context.commit('setShowAlert', alert);
+            reject();
+          }
+        })
+        .catch(function (error) {
+          // Проблемы на линии
+          console.log(error);
+          let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
+          context.commit('setShowAlert', alert);
+          context.commit("setShowWait", false);
+          reject();
+        });
+      });
+    },
   },
 
   getters: {

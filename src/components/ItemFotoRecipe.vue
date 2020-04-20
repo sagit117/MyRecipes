@@ -14,7 +14,8 @@
 				title="Предыдущее фото" 
 				@click.stop="setPosition(-1)"> ❮ </a>
     <div class="menu">
-      <img src="ico/heart.png" title="В избранное" @click.stop="addFavorite">
+      <img src="ico/HEART.svg" v-if="!recipe.fav" title="В избранное" @click.stop="addFavorite">
+      <img src="ico/HEART-red.png" v-else title="Убрать из избранного" @click.stop="addFavorite">
     </div>
 	</div>
 </template>
@@ -50,8 +51,18 @@
       },
       addFavorite() {
         // добавить в избранное
-        this.$store.dispatch("")
-      }
+        if (!this.recipe.fav) {
+          this.$store.dispatch("addFavoriteFotorecipe", { id_recipe: this.recipe.id, id_user: this.$store.getters.getUser.id})
+          .then(() => {
+            this.recipe.fav = true;
+          });
+        } else {
+          this.$store.dispatch("rmFavoriteFotorecipe", { id_recipe: this.recipe.id, id_user: this.$store.getters.getUser.id})
+          .then(() => {
+            this.recipe.fav = false;
+          });
+        }
+      },
 		},
 
   }
@@ -146,14 +157,15 @@
   .menu {
     display: flex;
     position: absolute;
-    height: 25px;
-    top: -20px;
+    height: 30px;
+    top: -25px;
     width: 272px;
     cursor: default;
   }
   .menu > img {
-    height: 15px;
-    width: 15px;
+    height: 25px;
+    width: 25px;
+    padding: 2px;
     cursor: pointer;
   }
 </style>
