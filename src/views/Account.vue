@@ -12,7 +12,7 @@
 			<div class="field">
 				<label>Имя:</label>
 				<input 	type="text"
-								v-model="name"
+								v-model.trim="name"
 								@input="inputName"
 								:class="{ isErr: errorType.name }"
 								@keyup.enter="saveData"
@@ -21,7 +21,7 @@
 			<div class="field">
 				<label>Фамилия:</label>
 				<input 	type="text"
-								v-model="surname"
+								v-model.trim="surname"
 								@input="inputSurname"
 								:class="{ isErr: errorType.surname }"
 								@keyup.enter="saveData"
@@ -30,7 +30,7 @@
 			<div class="field">
 				<label>Отчество:</label>
 				<input 	type="text"
-								v-model="patronymic"
+								v-model.trim="patronymic"
 								@input="inputPatronymic"
 								:class="{ isErr: errorType.patronymic }"
 								@keyup.enter="saveData"
@@ -129,7 +129,12 @@
 				return reg.test(value);
 			},
 			saveData() {
-				if (this.textError === '') this.$store.dispatch("changeDataUser", { name: this.name.trim(), surname: this.surname.trim(), patronymic: this.patronymic.trim(), id: this.$store.getters.getUser.id });
+        if (!this.errorType.name && !this.errorType.surname && !this.errorType.patronymic) {
+          this.$store.dispatch("changeDataUser", {  name: this.name, 
+                                                    surname: this.surname, 
+                                                    patronymic: this.patronymic, 
+                                                    id: this.$store.getters.getUser.id });
+        }
 			},
 			inputPass() {
 				if (this.newPass.length > 32) this.newPass = this.newPass.slice(0, 32);
@@ -141,7 +146,10 @@
 				(this.newPass !== this.confirmPass) ? this.errorType.confirmPass = true : this.errorType.confirmPass = false;
 				(this.newPass === '') ? this.errorType.newPass = true : this.errorType.newPass = false;
 
-				if (this.textError === '') this.$store.dispatch("changePassAccount", { newPass: this.newPass, oldPass: this.oldPass , id: this.$store.getters.getUser.id })
+				if (!this.errorType.confirmPass && !this.errorType.newPass) {
+          this.$store.dispatch("changePassAccount", { newPass: this.newPass, 
+                                                      oldPass: this.oldPass , 
+                                                      id: this.$store.getters.getUser.id })
 					.then((response) => {
 						if (response.errorCode > 0) {
 							this.errorType.oldPass = true;
@@ -150,7 +158,8 @@
 							this.errorType.oldPass = false;
 							this.errorText = '';
 						}
-					});
+          });
+        }
 			},
 
 		},

@@ -92,6 +92,9 @@ export default new Vuex.Store({
         }
       }
     },
+    setUserID(state, data) { // установить ИД текущего пользователя
+      state.user.id = data;
+    }
   },
 
   actions: {
@@ -256,8 +259,12 @@ export default new Vuex.Store({
           context.commit('setShowAlert', alert);
           context.commit('setNameUser', { userData });
         } else {
-          let alert = {show: true, caption: "Не удалось внести изменения.", text: response.data, type: 1};
+          let alert = {show: true, caption: "Ошибка!", text: response.data.errorText, type: 1};
           context.commit('setShowAlert', alert);
+          
+          if (response.data.errorCode === 77) { // ид в куки не совпадает с хеш, пользвоатель может быть разлогинен
+            context.commit("setUserID", 0);
+          }
         } 
       })
       .catch(function (error) {
@@ -305,7 +312,13 @@ export default new Vuex.Store({
       .then(function (response) {
         // успешно
         context.commit("setShowWait", false);
-        context.commit('setCategoriesRecipes', response.data);
+        if (response.data.errorCode === 0) {
+          context.commit('setCategoriesRecipes', response.data.data);
+        } else {
+          let alert = {show: true, caption: "Ошибка!", text: response.data.errorText, type: 1};
+          context.commit('setShowAlert', alert);
+          if (response.data.errorCode === 77) context.commit("setUserID", 0);
+        }
       })
       .catch(function (error) {
         // Проблемы на линии
@@ -322,12 +335,13 @@ export default new Vuex.Store({
         .then(function (response) {
           // Сохранено
           context.commit("setShowWait", false);
-          if (response.data.errorCode == 0) {
+          if (response.data.errorCode === 0) {
             resolve(response.data.id);
             context.dispatch('loadCategoriesRecipes', { parent_id: data.parent_id, author_id: data.author_id });
           } else {
             let alert = { show: true, caption: "Не удалось сохранить!", text: response.data.errorText, type: 1 };
             context.commit('setShowAlert', alert);
+            if (response.data.errorCode === 77) context.commit("setUserID", 0);
           }
         })
         .catch(function (error) {
@@ -357,6 +371,7 @@ export default new Vuex.Store({
         if (response.data.errorCode > 0) {
           let alert = {show: true, caption: "Не удалось загрузить списки!", text: response.data.errorText, type: 1};
           context.commit('setShowAlert', alert);
+          if (response.data.errorCode === 77) context.commit("setUserID", 0);
         } else {
           context.commit('setDataFotoRecipes', response.data);
         }
@@ -392,13 +407,14 @@ export default new Vuex.Store({
           // Сохранено
           context.commit("setShowWait", false);
 
-          if (response.data.count_error_img == 0 && response.data.errorText == '') {
+          if (response.data.count_error_img === 0 && response.data.errorCode === 0) {
             let alert = {show: true, caption: "Успешно", text: "Данные сохранены.", type: 3};
             context.commit('setShowAlert', alert);
           } else {
             let alert = {show: true, caption: "Прошло не совсем гладко", text: response.data, type: 2};
             context.commit('setShowAlert', alert);
             console.log(response.data);
+            if (response.data.errorCode === 77) context.commit("setUserID", 0);
           }
         })
         .catch(function (error) {
@@ -419,7 +435,7 @@ export default new Vuex.Store({
         .then(function(response) {
           context.commit("setShowWait", false);
 
-          if (response.data.errorCode == 0) {
+          if (response.data.errorCode === 0) {
             context.commit('delFoto', data);
             resolve();
           } else {
@@ -427,6 +443,7 @@ export default new Vuex.Store({
             let alert = {show: true, caption: "Ошибка!", text: response.data.errorText, type: 1};
             context.commit('setShowAlert', alert);
             reject(response.data);
+            if (response.data.errorCode === 77) context.commit("setUserID", 0);
           }
         })
         .catch(function(error) {
@@ -455,7 +472,7 @@ export default new Vuex.Store({
         })
         .then(function(response) {
           context.commit("setShowWait", false);
-          if (response.data.errorText === '') {
+          if (response.data.errorCode === 0) {
             let alert = {show: true, caption: "Успешно", text: "Данные сохранены.", type: 3};
             context.commit('setShowAlert', alert);
             resolve();
@@ -463,6 +480,7 @@ export default new Vuex.Store({
             let alert = {show: true, caption: "Ошибка!", text: response.data.errorText, type: 1};
             context.commit('setShowAlert', alert);
             reject();
+            if (response.data.errorCode === 77) context.commit("setUserID", 0);
           }
         })
         .catch(function (error) {
@@ -482,12 +500,13 @@ export default new Vuex.Store({
         axios.get(this.state.domainName + 'api/addFavoriteFotoRecipe.php?id_user=' + data.id_user + '&id_recipe=' + data.id_recipe)
         .then(function(response) {
           context.commit("setShowWait", false);
-          if (response.data.errorCode == 0) {
+          if (response.data.errorCode === 0) {
             resolve();
           } else {
             let alert = {show: true, caption: "Ошибка!", text: response.data.errorText, type: 1};
             context.commit('setShowAlert', alert);
             reject();
+            if (response.data.errorCode === 77) context.commit("setUserID", 0);
           }
         })
         .catch(function (error) {
@@ -507,12 +526,13 @@ export default new Vuex.Store({
         axios.get(this.state.domainName + 'api/rmFavoriteFotoRecipe.php?id_user=' + data.id_user + '&id_recipe=' + data.id_recipe)
         .then(function(response) {
           context.commit("setShowWait", false);
-          if (response.data.errorCode == 0) {
+          if (response.data.errorCode === 0) {
             resolve();
           } else {
             let alert = {show: true, caption: "Ошибка!", text: response.data.errorText, type: 1};
             context.commit('setShowAlert', alert);
             reject();
+            if (response.data.errorCode === 77) context.commit("setUserID", 0);
           }
         })
         .catch(function (error) {

@@ -21,7 +21,7 @@
 	$res = new Response;
 
 	if (!verifyUser($_COOKIE['id'])) { // проверка пользователя
-		$res->errorCode = 1;
+		$res->errorCode = 77;
 		$res->errorText = "Отказано в доступе!";
 		exit(json_encode($res)); 
   }

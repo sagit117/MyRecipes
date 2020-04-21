@@ -166,6 +166,8 @@
 	}
   .menuItem > img {
     cursor: pointer;
+    width: 50px;
+    height: 50px;
   }
 
 	.itemRecipe {
@@ -198,6 +200,7 @@
     border-bottom: 1px solid #eaeaea;
     padding-bottom: 15px;
     margin-bottom: 15px;
+    padding-right: 5px;
   }
   .menuFilter > li:last-child {
     border-bottom: none;

@@ -19,17 +19,25 @@
     public $errorText = '';
   }
 
-  if (isset($_GET['name'])) {
-    $res = new Response();
+  $res = new Response();
+  $author_id = intval($_GET['author_id']);
 
-    if (!verifyUser($_COOKIE['id'])) { // проверка пользователя
-      $res->errorCode = 1;
-      $res->errorText = "Отказано в доступе!";
-      exit(json_encode($res)); 
-    }
+  if (!verifyUser($_COOKIE['id'])) { // проверка пользователя
+    $res->errorCode = 77;
+    $res->errorText = "Отказано в доступе!";
+    exit(json_encode($res));
+  }
+
+  $rule = getUser("id", intval($_COOKIE['id']))[0]->rule;
+  if ($rule !== "extra_user" and $author_id !== intval($_COOKIE['id'])) {
+    $res->errorCode = 1;
+    $res->errorText = "Отказано в доступе! Роль доступа: $rule";
+    exit(json_encode($res));
+  }
+
+  if (isset($_GET['name'])) {
 
     $name = $_GET['name'];
-    $author_id = intval($_GET['author_id']);
     $parent_id = $_GET['parent_id'];
 
     if ($author_id === 0) {
@@ -41,13 +49,6 @@
     if ($name === '') {
       $res->errorCode = 4;
       $res->errorText = "Имя категории не должно быть пустым!";
-      exit(json_encode($res));
-    }
-
-    $rule = getUser("id", intval($_COOKIE['id']))[0]->rule;
-    if ($rule !== "extra_user" and $author_id !== intval($_COOKIE['id'])) {
-      $res->errorCode = 1;
-      $res->errorText = "Отказано в доступе! Роль доступа: $rule";
       exit(json_encode($res));
     }
     	

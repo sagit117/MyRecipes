@@ -14,7 +14,8 @@
   require 'login.php';
   
   class ResponseFR {
-		public $errorText = '';
+    public $errorText = '';
+    public $errorCode = 0;
 	}
 
   if (isset($_POST['id'])) {
@@ -23,6 +24,7 @@
 
     if (!verifyUser($_COOKIE['id'])) { // проверка пользователя
       $res->errorText = "Отказано в доступе!";
+      $res->errorCode = 77;
       exit(json_encode($response)); 
     }
 
@@ -35,6 +37,7 @@
     $rule = getUser("id", intval($_COOKIE['id']))[0]->rule;
     if ($rule !== "extra_user" and $author_id !== intval($_COOKIE['id'])) {
       $res->errorText = "Отказано в доступе! Роль доступа: $rule";
+      $res->errorCode = 1;
       exit(json_encode($res));
     }
 

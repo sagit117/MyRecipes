@@ -59,6 +59,13 @@
 
       let id = lib.getCookie('id');
       if (id > 0) this.$store.dispatch('loginedUserHash', id);
+
+      this.$store.subscribe((mutation) => {
+        //console.log(mutation.payload);
+        if (mutation.type === 'setUserID') {
+          this.showLoginState = 1;
+        }
+      });
     },
 
     methods: {

@@ -18,28 +18,26 @@
 	}
 
 	$res = new Response;
+	$id = intval($_POST['id']);
 
 	if (!verifyUser($_COOKIE['id'])) { // проверка пользователя
-		$res->errorCode = 1;
+		$res->errorCode = 77;
 		$res->errorText = "Отказано в доступе!";
 		exit(json_encode($res)); 
 	}
 
-	if (intval($_POST['id']) > 0) {
-		$id = intval($_POST['id']);
-		$rule = getUser("id", intval($_COOKIE['id']))[0]->rule;
+	$rule = getUser("id", intval($_COOKIE['id']))[0]->rule;
+	if ($rule != "extra_user" and $id != intval($_COOKIE['id'])) {
+		$res->errorCode = 1;
+		$res->errorText = "Отказано в доступе! Роль доступа: $rule";
+		exit(json_encode($res));
+	} 
 
-		if ($rule != "extra_user" and $id != intval($_COOKIE['id'])) {
-			$res->errorCode = 1;
-			$res->errorText = "Отказано в доступе! Роль доступа: $rule";
-			echo json_encode($res);
-		} else {
-			if (isset($_POST['name'])) $name = updateUser("name", $_POST['name'], "id", $id);
-			if (isset($_POST['surname'])) $surname = updateUser("surname", $_POST['surname'], "id", $id);
-			if (isset($_POST['patronymic'])) $patronymic = updateUser("patronymic", $_POST['patronymic'], "id", $id);
-
-			echo json_encode($res);
-		}
+	if ($id > 0) {	
+		if (isset($_POST['name'])) $name = updateUser("name", $_POST['name'], "id", $id);
+		if (isset($_POST['surname'])) $surname = updateUser("surname", $_POST['surname'], "id", $id);
+		if (isset($_POST['patronymic'])) $patronymic = updateUser("patronymic", $_POST['patronymic'], "id", $id);
+		echo json_encode($res);
 	} else {
 	  $res->errorCode = 2;
 		$res->errorText = "Нет запроса!";

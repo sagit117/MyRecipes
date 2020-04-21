@@ -16,18 +16,20 @@
 	class ResponseSR {
 		public $id = 0;
 		public $count_error_img = 0;
-		public $errorText = '';
-	}
+    public $errorText = '';
+    public $errorCode = 0;
+  }
+
+  $response = new ResponseSR();
+
+  if (!verifyUser($_COOKIE['id'])) { // проверка пользователя
+    $response->errorText = "Отказано в доступе!";
+    $response->errorCode = 77;
+    exit(json_encode($response)); 
+  }
 
   if (isset($_POST['name'])) {
     // сохранить фото рецепт в базу
-    $response = new ResponseSR();
-
-    if (!verifyUser($_COOKIE['id'])) { // проверка пользователя
-      $response->errorText = "Отказано в доступе!";
-      exit(json_encode($response)); 
-    }
-
     $name = $_POST['name'];
     $parent_id = intval($_POST['parent_id']);
     $author_id = intval($_POST['author_id']);
@@ -35,10 +37,11 @@
 
     $rule = getUser("id", intval($_COOKIE['id']))[0]->rule;
     if ($rule != "extra_user" and $author_id != intval($_COOKIE['id'])) {
-      $res->errorText = "Отказано в доступе! Роль доступа: $rule";
+      $response->errorText = "Отказано в доступе! Роль доступа: $rule";
+      $response->errorCode = 1;
       exit(json_encode($res));
     }
-
+    
     $arrImg = (!isset($_POST['fileFoto'])) ? saveImageFiles($_FILES) : saveImage($_POST['fileFoto']);
     $id = saveFotoRecipes($arrImg, $name, $parent_id, $author_id, $diet);
 
@@ -57,7 +60,8 @@
     	$errorText = ($i > 0) ? "Загружено $i из $count фото" : '';
     } else {
     	$response->id = $id;
-    	$response->count_error_img = $i;
+      $response->count_error_img = $i;
+      $response->errorCode = 2;
     	$errorText = 'Произошла ошибка при попытке создать запись!';
     }
 
