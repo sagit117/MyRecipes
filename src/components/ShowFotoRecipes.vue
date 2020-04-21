@@ -44,7 +44,8 @@
 					<ItemFotoRecipe 
 						:recipe="recipe" 
 						v-if="showRow.indexOf(index) !== -1" 
-						@edit="edit(recipe)" />
+						@edit="edit(recipe)" 
+            @delete="loadFotorecipes" />
 				</div>
 			</div>
 			<div class="listFotoRecipes" v-else>
@@ -52,7 +53,8 @@
 					v-for="recipe in this.$store.getters.getDataFotoRecipes" 
 					:key="recipe.id" 
 					:recipe="recipe" 
-					@edit="edit(recipe)" />
+					@edit="edit(recipe)" 
+          @delete="loadFotorecipes" />
 			</div>
 
       <PageList :totalPage="Math.ceil($store.getters.getTotalFotoRecipes / $store.getters.getLimitFotoRecipes)" 

@@ -16,7 +16,12 @@
     <div class="menu">
       <img src="ico/HEART.svg" v-if="!recipe.fav" title="В избранное" @click.stop="addFavorite">
       <img src="ico/HEART-red.png" v-else title="Убрать из избранного" @click.stop="addFavorite">
+      <span @click.stop="addFavorite">Избранное</span>
     </div>
+
+    <div class="del" @click.stop="deleteRecipe">
+			<img src="ico/delete.png" title="Удалить">
+		</div>
 	</div>
 </template>
 
@@ -63,6 +68,15 @@
           });
         }
       },
+      deleteRecipe() {
+        if (confirm("Удалить рецепт?")) {
+          // удаление рецепта
+          this.$store.dispatch("rmFotoRecipe", { id: this.recipe.id })
+          .then(() => {
+            this.$emit('delete');
+          });
+        }
+      }
 		},
 
   }
@@ -161,6 +175,7 @@
     top: -25px;
     width: 272px;
     cursor: default;
+    align-items: center;
   }
   .menu > img {
     height: 25px;
@@ -168,4 +183,20 @@
     padding: 2px;
     cursor: pointer;
   }
+  .menu > span {
+    cursor: pointer;
+  }
+
+  .del {
+		position: absolute;
+		top: 10px;
+		left: 10px;
+  }
+  .del > img {
+		width: 30px;
+		height: 30px;
+		vertical-align: middle;
+		cursor: pointer;
+  }
+
 </style>

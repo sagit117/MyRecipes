@@ -11,14 +11,16 @@
   // getAuthorFoto          - получить ИД автора фото по ИД фото
   // deleteFoto             - удалить фото по ИД фото
   // updateFotoRecipe       - обновить фото рецепт
-  // getArrayFotoID         - получить массив фото
+  // getArrayFoto           - получить массив фото
   // updateImgRecords       - перезаписать запись с фото от оторецепта
   // createImgRecords       - создать запись с фото для фото рецепта
   // addFavoriteFotoRecipe  - добавить рецепт в избранное
   // rmFavoriteFotoRecipe   - удалить рецепт из избранного
   // getTotalFotoRecipes    - получить количество страниц
+  // rmFotoRecipe           - удалить рецепт
 
   require 'connect.php';
+  require_once 'image.php';
 
   class DataRecipes {
     public $id = 0;
@@ -213,7 +215,9 @@
     $id_recipe = intval($id_recipe);
     $id_user = intval($id_user);
 
-    mysqli_query($link, "DELETE FROM `favorite_foto_recipes` WHERE `id_recipe`='$id_recipe' AND `id_user`='$id_user'");
+    if ($id_user > 0) $str_user = "`id_user`='$id_user' AND ";
+
+    mysqli_query($link, "DELETE FROM `favorite_foto_recipes` WHERE $str_user `id_recipe`='$id_recipe'");
   }
 
   function getTotalFotoRecipes($parent_id, $author_id, $diet) {
@@ -233,4 +237,19 @@
     $result = mysqli_query($link, "SELECT count(*) FROM `foto_recipes` WHERE $str_parent $str_author $str_diet");
     return mysqli_fetch_row($result)[0];
   }
+
+  function rmFotoRecipe($id_recipe) {
+    // удалить рецепт
+    global $link;
+    $id_recipe = intval($id_recipe);
+
+    mysqli_query($link, "DELETE FROM `foto_recipes` WHERE `id`='$id_recipe'"); // удалить запись рецепта
+    rmFavoriteFotoRecipe(0, $id_recipe); // удалить рецепт из избранного
+    $arr = getArrayFoto($id_recipe);
+
+    foreach ($arr as $img) { // удалить фото
+      deleteImg(deleteFoto($img->id));
+    }
+  }
+
 ?>

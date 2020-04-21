@@ -31,7 +31,7 @@ export default new Vuex.Store({
     categoriesRecipes: '',                      // JSON категории рецептов по родителю, автору
     // фото рецепты
     fotoRecipes: '',                            // JSON фото рецептов по страницам, авторам и родителю
-    limit_foto_recipes: 30,                     // лимит вывода на страницу 
+    limit_foto_recipes: 1,                     // лимит вывода на страницу 
     total_count_foto_recipes: 0,                // общее количество рецептов для подсчета числа страниц
     // BigFoto
     bigFoto: {
@@ -540,7 +540,7 @@ export default new Vuex.Store({
             if (response.data.errorCode === 77) context.commit("setUserID", 0);
           }
         })
-        .catch(function (error) {
+        .catch(function(error) {
           // Проблемы на линии
           console.log(error);
           let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
@@ -550,6 +550,32 @@ export default new Vuex.Store({
         });
       });
     },
+    async rmFotoRecipe(context, data) { // удалить фото рецепт
+      return new Promise((resolve, reject) => {
+        context.commit("setShowWait", true);
+        axios.get(this.state.domainName + 'api/rmFotoRecipe.php?id=' + data.id)
+        .then(function(response) {
+          context.commit("setShowWait", false);
+
+          if (response.data.errorCode === 0) {
+            resolve();
+          } else {
+            let alert = {show: true, caption: "Ошибка!", text: response.data.errorText, type: 1};
+            context.commit('setShowAlert', alert);
+            if (response.data.errorCode === 77) context.commit("setUserID", 0);
+            reject();
+          }
+        })
+        .catch(function(error) {
+          // Проблемы на линии
+          console.log(error);
+          let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
+          context.commit('setShowAlert', alert);
+          context.commit("setShowWait", false);
+          reject();
+        });
+      });
+    }
   },
 
   getters: {

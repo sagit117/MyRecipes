@@ -40,10 +40,11 @@
 <style scoped>
   .pageList {
     display: flex;
-    width: 100%;
+    /*width: 100%;*/
     justify-content: center;
     align-items: center;
     margin: 15px;
+    flex-wrap: wrap;
   }
   .page {
     border-radius: 50%;

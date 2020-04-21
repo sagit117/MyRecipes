@@ -5,7 +5,7 @@
   /* 04.2020 */
   /* sagit117@gmail.com */
 
-  require 'user.php'; // для генерации имени
+  require_once 'user.php'; // для генерации имени
 
   class Response {
     public $image_name = '';
