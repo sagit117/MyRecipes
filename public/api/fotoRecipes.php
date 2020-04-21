@@ -16,6 +16,7 @@
   // createImgRecords       - создать запись с фото для фото рецепта
   // addFavoriteFotoRecipe  - добавить рецепт в избранное
   // rmFavoriteFotoRecipe   - удалить рецепт из избранного
+  // getTotalFotoRecipes    - получить количество страниц
 
   require 'connect.php';
 
@@ -213,5 +214,23 @@
     $id_user = intval($id_user);
 
     mysqli_query($link, "DELETE FROM `favorite_foto_recipes` WHERE `id_recipe`='$id_recipe' AND `id_user`='$id_user'");
+  }
+
+  function getTotalFotoRecipes($parent_id, $author_id, $diet) {
+    // получить количество страниц
+    global $link;
+    $parent_id = intval($parent_id);
+    $author_id = intval($author_id);
+    $diet = intval($diet);
+
+    $str_parent = ($parent_id === 0) ? "" : " `parent_id`='$parent_id' ";
+    $str_diet = ($diet === 0) ? "" : " `diet`='$diet' ";
+    $str_author = ($author_id === 0) ? "" : " `author_id`='$author_id' ";
+
+    if ($str_parent !== '' AND ($str_diet !== '' OR $str_author !== '')) $str_parent .= " AND ";
+    if ($author_id !== '' AND $str_diet !== '') $str_author .= " AND ";
+
+    $result = mysqli_query($link, "SELECT count(*) FROM `foto_recipes` WHERE $str_parent $str_author $str_diet");
+    return mysqli_fetch_row($result)[0];
   }
 ?>

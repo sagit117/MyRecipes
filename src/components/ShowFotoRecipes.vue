@@ -12,6 +12,7 @@
           <img src="ico/HAMBURGER MENU.svg" title="Фильтры" @click.stop="showFilterMenu = !showFilterMenu">
         </div>
 
+        <transition name="slide-fade">
         <ul class="menuFilter" v-if="showFilterMenu">
           <div class="close" title="Закрыть" @click="showFilterMenu = !showFilterMenu">
             &#215;
@@ -19,7 +20,7 @@
           <h3> Фильтры </h3>
 
           <li>
-            <ShowCategory ref='listCategories' @change-group="changeGroup" :cat_id="0" />
+            <ShowCategory ref='listCategories' @change-group="changeGroup" :id_cat="parseInt(parent_id)" />
           </li>
           <li>
             <label><input type="checkbox" v-model="diet" @change="clickDiet">Только диетическое</label>
@@ -33,6 +34,7 @@
             <button>Показать в виде кубов</button>
           </li>
         </ul>
+        </transition>
 
 			</div>
 
@@ -52,6 +54,10 @@
 					:recipe="recipe" 
 					@edit="edit(recipe)" />
 			</div>
+
+      <PageList :totalPage="Math.ceil($store.getters.getTotalFotoRecipes / $store.getters.getLimitFotoRecipes)" 
+                @active-page="setPage"/>
+
 		</template>
 
 		<LoadFotoRecipes v-if="state === 2" @close="winUpdate(1)"/>
@@ -70,6 +76,7 @@
   import ItemFotoRecipe from '@/components/ItemFotoRecipe.vue'
   import LoadFotoRecipes from '@/components/LoadFotoRecipes.vue'
   import EditFotoRecipe from '@/components/EditFotoRecipe.vue'
+  import PageList from '@/components/PageList.vue'
   import lib from '@/lib/lib.js'
 	
 	export default {
@@ -77,7 +84,8 @@
 			ShowCategory,
 			ItemFotoRecipe,
 			LoadFotoRecipes,
-			EditFotoRecipe,
+      EditFotoRecipe,
+      PageList,
 		},
 
 		data() {
@@ -89,6 +97,7 @@
 				state: 1,
         edit_recipe: {},
         showFilterMenu: false,
+        parent_id: 0,
 			}
 		},
 
@@ -99,15 +108,16 @@
 
 		methods: {
 			changeGroup(id) {
-				this.loadFotorecipes(id);
+        this.parent_id = id;
+        this.loadFotorecipes();
 			},
 			setTypeShowList(val) {
 				this.typeShowList = val;
 				this.$store.dispatch('setCookie', { name: 'typeShowList', value: val, delCookie: false } );
 			},
-			loadFotorecipes(parent_id) {
+			loadFotorecipes() {
 				this.$store.dispatch('loadFotorecipes', {
-					parent_id: parent_id,
+					parent_id: this.parent_id,
 					page: this.page - 1,
 					author_id: this.$store.getters.getUser.id,
 					diet: (this.diet) ? 1 : 0
@@ -115,7 +125,7 @@
 			},
 			clickDiet() {
 				// фильтр по диет питанию
-				this.loadFotorecipes(this.$refs.listCategories.$refs.listCategories.value);
+				this.loadFotorecipes();
 			},
 			setShowRow(index) {
 				if (this.showRow.indexOf(index) === -1) {
@@ -130,8 +140,12 @@
 			},
 			winUpdate(state) {
 				this.state = state;
-				this.loadFotorecipes(0);
-			},
+				this.loadFotorecipes();
+      },
+      setPage(index) {
+        this.page = index;
+        this.loadFotorecipes();
+      },
 
 		},
 
@@ -148,7 +162,6 @@
 		display: block;
 	}
 	.btnAdd > button {
-		background-color: green;
 		height: 40px;
 	}
 
@@ -235,6 +248,17 @@
 		margin-left: 15px;
 		margin-right: 15px;
 	}
+
+  .slide-fade-enter-active {
+    transition: all .3s ease;
+  }
+  .slide-fade-leave-active {
+    transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+  .slide-fade-enter, .slide-fade-leave-to {
+    transform: translateX(10px);
+    opacity: 0;
+  }
 
 @media (min-width: 100px) and (max-width: 610px) {
 	/*.MenuFotoRecipes {

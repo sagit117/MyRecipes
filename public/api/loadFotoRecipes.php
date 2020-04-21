@@ -15,7 +15,9 @@
 
 	class Response {
 		public $errorCode = 0;
-		public $errorText = '';
+    public $errorText = '';
+    public $dataFotoRecipes = '';
+    public $totalCountFotoRecipes = 0;
 	}
 
 	if (count($_POST) > 0) {
@@ -41,8 +43,9 @@
 		$diet = $_POST['diet'];
 		$limit = $_POST['limit'];
 
-		$str = getFotoRecipes($parent_id, $author_id, $page, $diet, $limit);
+    $res->dataFotoRecipes = getFotoRecipes($parent_id, $author_id, $page, $diet, $limit);
+    $res->totalCountFotoRecipes = getTotalFotoRecipes($parent_id, $author_id, $diet);
 
-		echo json_encode($str);
+		echo json_encode($res);
 	}
 ?>

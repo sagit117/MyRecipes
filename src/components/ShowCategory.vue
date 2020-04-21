@@ -5,13 +5,13 @@
 
       <div class="option">
         <select ref="listCategories" 
-          @change="()=>{ this.$emit('change-group', this.$refs.listCategories.value) }" 
-          :value="(id_cat) ? id_cat : 0">
+          @change="()=>{ this.$emit('change-group', this.$refs.listCategories.value) }" >
           <option value="0">Все</option>
           <option v-for="item in this.$store.getters.getCategoriesRecipe" 
             :key="item.id"
             :value="item.id"
-            :selected="parseInt(item.id) === valueSel">{{ item.name }}</option>
+            :selected="parseInt(item.id) === valueSel"
+            >{{ item.name }}</option>
         </select>
 
         <div class="addDiv" @click="()=>{ this.showAddDiv = !this.showAddDiv }" v-if="showAddBtn">
@@ -50,7 +50,7 @@
         showAddDiv: false,
         nameCategory: '',
         errName: false,
-        valueSel: 0,        // ID для выбранной категории
+        valueSel: this.id_cat,        // ID для выбранной категории
       }
     },
 

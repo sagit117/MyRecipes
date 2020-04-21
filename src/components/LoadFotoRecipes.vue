@@ -6,7 +6,7 @@
               :multiple="true"
               :showImg="true" />
     <div class="item">
-      <ShowCategory ref="listCategories" :showAddBtn="true" :cat_id="0" />
+      <ShowCategory ref="listCategories" :showAddBtn="true" :id_cat="0" />
     </div>
     <div class="item">
       <label>Название рецепта: </label>

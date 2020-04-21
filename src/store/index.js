@@ -32,6 +32,7 @@ export default new Vuex.Store({
     // фото рецепты
     fotoRecipes: '',                            // JSON фото рецептов по страницам, авторам и родителю
     limit_foto_recipes: 30,                     // лимит вывода на страницу 
+    total_count_foto_recipes: 0,                // общее количество рецептов для подсчета числа страниц
     // BigFoto
     bigFoto: {
       show: false,                              // Показать див для просмотра изображений
@@ -94,7 +95,10 @@ export default new Vuex.Store({
     },
     setUserID(state, data) { // установить ИД текущего пользователя
       state.user.id = data;
-    }
+    },
+    setTotalCountFotoRecipes(state, data) { // установить количество рецептов для подсчета числа страниц
+      state.total_count_foto_recipes = data;
+    },
   },
 
   actions: {
@@ -373,7 +377,8 @@ export default new Vuex.Store({
           context.commit('setShowAlert', alert);
           if (response.data.errorCode === 77) context.commit("setUserID", 0);
         } else {
-          context.commit('setDataFotoRecipes', response.data);
+          context.commit('setDataFotoRecipes', response.data.dataFotoRecipes);
+          context.commit('setTotalCountFotoRecipes', response.data.totalCountFotoRecipes);
         }
       })
       .catch(function (error) {
@@ -569,6 +574,12 @@ export default new Vuex.Store({
     getBigFotoData: state => {
       return state.bigFoto;
     },
+    getLimitFotoRecipes: state => {
+      return state.limit_foto_recipes;
+    },
+    getTotalFotoRecipes: state => {
+      return state.total_count_foto_recipes;
+    }
   },
 
 

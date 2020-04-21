@@ -178,7 +178,7 @@
   input {
     border: none;
     border-bottom: 1px solid #42b983;
-    font-size: 14px;
+    font-size: 16px;
     height: 25px;
     outline: 0;
     border-radius: 0;
@@ -209,6 +209,14 @@
 
   .itemMenu > a.router-link-exact-active, .itemMenu > a.router-link-active {
     color: white;
+  }
+
+  @media screen and (-webkit-min-device-pixel-ratio:0) { 
+    select,
+    textarea,
+    input {
+      font-size: 16px;
+    }
   }
 
 </style>
