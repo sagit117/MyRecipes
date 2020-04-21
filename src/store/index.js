@@ -31,7 +31,7 @@ export default new Vuex.Store({
     categoriesRecipes: '',                      // JSON категории рецептов по родителю, автору
     // фото рецепты
     fotoRecipes: '',                            // JSON фото рецептов по страницам, авторам и родителю
-    limit_foto_recipes: 1,                     // лимит вывода на страницу 
+    limit_foto_recipes: 30,                     // лимит вывода на страницу 
     total_count_foto_recipes: 0,                // общее количество рецептов для подсчета числа страниц
     // BigFoto
     bigFoto: {
