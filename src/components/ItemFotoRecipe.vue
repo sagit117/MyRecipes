@@ -74,7 +74,7 @@
           this.$store.dispatch("rmFotoRecipe", { id: this.recipe.id })
           .then(() => {
             this.$emit('delete');
-          });
+          }); 
         }
       }
 		},

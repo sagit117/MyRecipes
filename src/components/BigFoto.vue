@@ -1,9 +1,15 @@
 <template>
   <div class="bigFoto" ref="div">
-    <img :src="this.$store.getters.getDomainName + this.$store.getters.getBigFotoData.arrayImg[pos].path_img" ref="img" @click="close()">
+
+    <img 
+      :src="this.$store.getters.getDomainName + this.$store.getters.getBigFotoData.arrayImg[pos].path_img" 
+      ref="img" 
+      @click="close()">
+
     <div class="close" title="Закрыть" @click="close()">
       &#215;
     </div>
+
     <a  class="right" 
         title="Следующее фото"
         @click="setPosition(1)"> ❯ </a>
@@ -181,6 +187,13 @@
         height: 20px;
         vertical-align: middle;
         cursor: pointer;
+    }
+  
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity .5s;
+    }
+    .fade-enter, .fade-leave-to {
+      opacity: 0;
     }
 
 @media (min-width: 100px) and (max-width: 415px) {
