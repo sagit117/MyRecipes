@@ -10,7 +10,7 @@
 	header("Access-Control-Allow-Headers: *");
 
 	require 'fotoRecipes.php';
-	require 'image.php';
+	require_once 'image.php';
 	require 'login.php';
 	require_once 'user.php';
 
@@ -32,7 +32,7 @@
     $author_id = getAuthorFoto($id);
     
 		$rule = getUser("id", intval($_COOKIE['id']))[0]->rule;
-		if ($rule != "extra_user" and $author_id != intval($_COOKIE['id'])) {
+		if ($rule !== "extra_user" and $author_id !== intval($_COOKIE['id'])) {
 			$res->errorCode = 4;
 			$res->errorText = "Отказано в доступе! Роль доступа: $rule";
 			exit(json_encode($res));
