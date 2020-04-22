@@ -3,8 +3,7 @@
 
     <img 
       :src="this.$store.getters.getDomainName + this.$store.getters.getBigFotoData.arrayImg[pos].path_img" 
-      ref="img" 
-      @click="close()">
+      ref="img" >
 
     <div class="close" title="Закрыть" @click="close()">
       &#215;
@@ -34,6 +33,7 @@
       return {
         pos: this.$store.getters.getBigFotoData.position_img,
         deg: 0,
+        startX: 0,
       }
     },
 
@@ -44,6 +44,9 @@
       }
 
       document.body.style.overflow = 'hidden';
+
+      img.addEventListener("touchstart", this.startHandler, false);
+      img.addEventListener("touchend", this.endHandler, false);
     },
 
     methods: {
@@ -89,6 +92,14 @@
 
         this.$refs.img.style.transform = "rotate(" + this.deg + "deg)";
       },
+      startHandler(e) {
+        this.startX = e.changedTouches[0].clientX;
+        e.preventDefault();
+      },
+      endHandler(e) {
+        if ((e.changedTouches[0].clientX - this.startX) > 30) this.setPosition(-1);
+        if ((e.changedTouches[0].clientX - this.startX) < -30) this.setPosition(1);
+      }, 
     },
 
   }
