@@ -95,6 +95,7 @@
 		/*overflow: hidden;*/
 		padding: 5px;
 		background-color: #41444a;
+    white-space: normal;
 	}
 	.itemRecipeBlock > img {
 		width: calc(100% - 2px);

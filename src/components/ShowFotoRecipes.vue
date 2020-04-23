@@ -25,20 +25,20 @@
           <li>
             <label><input type="checkbox" v-model="diet" @change="clickDiet">Только диетическое</label>
           </li>
-          <li v-if="typeShowList === 2"
+          <!-- <li v-if="typeShowList === 2"
 							@click="setTypeShowList(1)">
             <button>Показать в виде строк</button>
           </li>
           <li v-else
 							@click="setTypeShowList(2)">
             <button>Показать в виде кубов</button>
-          </li>
+          </li> -->
         </ul>
         </transition>
 
 			</div>
 
-			<div class="listFotoRecipes" v-if="typeShowList === 1">
+			<div class="listFotoRecipes" v-if="typeShowList === 1"> <!-- строки -->
 				<div class="itemRecipe" v-for="(recipe, index) in this.$store.getters.getDataFotoRecipes" :key="recipe.id">
 					<a href="#" @click.prevent="setShowRow(index)">{{ recipe.name }}</a>
 					<ItemFotoRecipe 
@@ -47,18 +47,29 @@
 						@edit="edit(recipe)" 
             @delete="loadFotorecipes" />
 				</div>
-			</div>
-			<div class="listFotoRecipes" v-else>
-				<ItemFotoRecipe 
-					v-for="recipe in this.$store.getters.getDataFotoRecipes" 
-					:key="recipe.id" 
-					:recipe="recipe" 
-					@edit="edit(recipe)" 
-          @delete="loadFotorecipes" />
+        <PageList 
+          :totalPage="Math.ceil($store.getters.getTotalFotoRecipes / $store.getters.getLimitFotoRecipes)" 
+          @active-page="setPage" />
 			</div>
 
-      <PageList :totalPage="Math.ceil($store.getters.getTotalFotoRecipes / $store.getters.getLimitFotoRecipes)" 
-                @active-page="setPage"/>
+			<div class="listFotoRecipes" v-else> <!-- кубы -->
+
+        <template v-for="group in this.$store.getters.getCategoriesRecipe">
+          <div class="blockGroup"  :key="group.id" v-if="vilterFotoRecipesToGroup(group.id).length !== 0">
+            <span>{{ group.name }}</span>
+            <div class="group">
+              <ItemFotoRecipe 
+                v-for="recipe in vilterFotoRecipesToGroup(group.id)" 
+                :key="recipe.id" 
+                :recipe="recipe" 
+                @edit="edit(recipe)" 
+                @delete="loadFotorecipes" />
+            </div>
+            <a href="#" title="показать все" @click.prevent="changeGroup(group.id)">показать все</a>
+          </div>
+        </template>
+
+			</div>
 
 		</template>
 
@@ -100,17 +111,24 @@
         edit_recipe: {},
         showFilterMenu: false,
         parent_id: 0,
+        limit_foto_in_group: 20,
 			}
 		},
 
 		created() {
-			this.loadFotorecipes(0);
-			this.typeShowList = (!lib.getCookie('typeShowList')) ? 2 : parseInt(lib.getCookie('typeShowList'));
-		},
+			this.loadFotorecipes();
+      this.typeShowList = (!lib.getCookie('typeShowList')) ? 2 : parseInt(lib.getCookie('typeShowList'));
+      this.$store.dispatch('loadCategoriesRecipes', { parent_id: 0, author_id: this.$store.getters.getUser.id });
+    },
 
 		methods: {
 			changeGroup(id) {
         this.parent_id = id;
+        if (id > 0) {
+          this.setTypeShowList(1);
+        } else {
+          this.setTypeShowList(2);
+        }
         this.loadFotorecipes();
 			},
 			setTypeShowList(val) {
@@ -148,8 +166,22 @@
         this.page = index;
         this.loadFotorecipes();
       },
+      vilterFotoRecipesToGroup(id) {
+        const listFR = this.$store.getters.getDataFotoRecipes;
+        if (typeof(listFR) === 'string') return [];
 
-		},
+        const result = listFR.filter(filterRec);
+
+        function filterRec(recipe) {
+          if (recipe.parent_id === id) return true;
+          return false;
+        }
+
+        //if (result.length > this.limit_foto_in_group) result.length = this.limit_foto_in_group;
+        return result;
+      }
+
+    },
 
 	}
 </script>
@@ -226,6 +258,37 @@
     margin-left: 0px;
   }
 
+  .slide-fade-enter-active {
+    transition: all .3s ease;
+  }
+  .slide-fade-leave-active {
+    transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+  .slide-fade-enter, .slide-fade-leave-to {
+    transform: translateX(10px);
+    opacity: 0;
+  }
+
+  .blockGroup {
+    border-top: 1px solid #42b983;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .blockGroup > span {
+    position: absolute;
+    top: -20px;
+  }
+  .blockGroup > a {
+    float: right;
+  }
+
+  .group {
+    position: relative;
+    white-space: nowrap; 
+    overflow-x: scroll;
+  }
+
 	input[type=checkbox] {
 		cursor: pointer;
 		margin-right: 5px;
@@ -251,16 +314,6 @@
 		margin-right: 15px;
 	}
 
-  .slide-fade-enter-active {
-    transition: all .3s ease;
-  }
-  .slide-fade-leave-active {
-    transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-  }
-  .slide-fade-enter, .slide-fade-leave-to {
-    transform: translateX(10px);
-    opacity: 0;
-  }
 
 @media (min-width: 100px) and (max-width: 610px) {
 	/*.MenuFotoRecipes {

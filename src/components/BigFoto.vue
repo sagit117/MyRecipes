@@ -102,6 +102,13 @@
       }, 
     },
 
+    beforeDestroy: function () {
+      let img = this.$refs.img;
+
+      img.removeEventListener("touchstart", this.startHandler);
+      img.removeEventListener("touchend", this.endHandler);
+    },
+
   }
 </script>
 
