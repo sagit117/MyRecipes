@@ -365,6 +365,7 @@ export default new Vuex.Store({
       formData.append('author_id', data.author_id);
       formData.append('page', data.page);
       formData.append('diet', data.diet);
+      formData.append('fav', data.fav);
 
       context.commit("setShowWait", true);
 

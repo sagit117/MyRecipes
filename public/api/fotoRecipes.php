@@ -72,7 +72,7 @@
     											VALUES 	('$parent_id', '$path_img', '$author_id')");
   }
 
-  function getFotoRecipes($parent_id, $author_id, $page, $diet, $limit) {
+  function getFotoRecipes($parent_id, $author_id, $page, $diet, $limit, $fav) {
     // получить список фото рецептов по ИД групп, ИД автора, страница * лимит, лимит, диет
     global $link;
     $parent_id = intval($parent_id);
@@ -114,13 +114,17 @@
         $dataImg->parent_id = $img['parent_id'];
         $dataImg->author_id = $img['author_id'];
         $dataImg->path_img = $img['path_img'];
-
+        
         array_push($arrayImg, $dataImg);
       }
 
       $data->img = $arrayImg;
 
-      array_push($arrayRecipes, $data);
+      if (intval($fav) === 1) {
+        if ($data->fav === true) array_push($arrayRecipes, $data);
+      } else {
+        array_push($arrayRecipes, $data);
+      }
     }
 
     return $arrayRecipes;

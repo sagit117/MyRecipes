@@ -23,16 +23,11 @@
             <ShowCategory ref='listCategories' @change-group="changeGroup" :id_cat="parseInt(parent_id)" />
           </li>
           <li>
-            <label><input type="checkbox" v-model="diet" @change="clickDiet">Только диетическое</label>
+            <label><input type="checkbox" v-model="diet" @change="loadFotorecipes">Только диетическое</label>
           </li>
-          <!-- <li v-if="typeShowList === 2"
-							@click="setTypeShowList(1)">
-            <button>Показать в виде строк</button>
+          <li>
+            <label><input type="checkbox" v-model="onlyFav" @change="onlyFavVisible(false)">Только избранное</label>
           </li>
-          <li v-else
-							@click="setTypeShowList(2)">
-            <button>Показать в виде кубов</button>
-          </li> -->
         </ul>
         </transition>
 
@@ -54,8 +49,21 @@
 
 			<div class="listFotoRecipes" v-else> <!-- кубы -->
 
+        <div class="blockGroup" v-if="recipeFav.length !== 0">
+          <span>Избранное</span>
+          <div class="group">
+            <ItemFotoRecipe 
+              v-for="recipe in recipeFav" 
+              :key="recipe.id" 
+              :recipe="recipe" 
+              @edit="edit(recipe)" 
+              @delete="loadFotorecipes" />
+          </div>
+          <a href="#" title="показать все" @click.prevent="onlyFavVisible(true)">показать все</a>
+        </div>
+
         <template v-for="group in this.$store.getters.getCategoriesRecipe">
-          <div class="blockGroup"  :key="group.id" v-if="vilterFotoRecipesToGroup(group.id).length !== 0">
+          <div class="blockGroup" :key="group.id" v-if="vilterFotoRecipesToGroup(group.id).length !== 0">
             <span>{{ group.name }}</span>
             <div class="group">
               <ItemFotoRecipe 
@@ -90,7 +98,7 @@
   import LoadFotoRecipes from '@/components/LoadFotoRecipes.vue'
   import EditFotoRecipe from '@/components/EditFotoRecipe.vue'
   import PageList from '@/components/PageList.vue'
-  import lib from '@/lib/lib.js'
+  //import lib from '@/lib/lib.js'
 	
 	export default {
 		components: {
@@ -112,40 +120,60 @@
         showFilterMenu: false,
         parent_id: 0,
         limit_foto_in_group: 20,
+        onlyFav: false,
 			}
 		},
 
 		created() {
 			this.loadFotorecipes();
-      this.typeShowList = (!lib.getCookie('typeShowList')) ? 2 : parseInt(lib.getCookie('typeShowList'));
+      //this.typeShowList = (!lib.getCookie('typeShowList')) ? 2 : parseInt(lib.getCookie('typeShowList'));
       this.$store.dispatch('loadCategoriesRecipes', { parent_id: 0, author_id: this.$store.getters.getUser.id });
     },
 
+    computed: {
+      recipeFav: function() {
+        // вычислить рецепты для избранного
+        const listFR = this.$store.getters.getDataFotoRecipes;
+        if (typeof(listFR) === 'string') return [];
+
+        const result = listFR.filter(filterRec);
+
+        function filterRec(recipe) {
+          return recipe.fav;
+        }
+        return result;
+      },
+    },
+
 		methods: {
+      onlyFavVisible(state) {
+        if (state) this.onlyFav = true;
+
+        if (this.onlyFav) {
+          this.typeShowList = 1;
+        } else {
+          this.typeShowList = 2;
+        }
+
+        this.loadFotorecipes();
+      },
 			changeGroup(id) {
         this.parent_id = id;
         if (id > 0) {
-          this.setTypeShowList(1);
+          this.typeShowList = 1;
         } else {
-          this.setTypeShowList(2);
+          this.typeShowList = 2;
         }
         this.loadFotorecipes();
-			},
-			setTypeShowList(val) {
-				this.typeShowList = val;
-				this.$store.dispatch('setCookie', { name: 'typeShowList', value: val, delCookie: false } );
 			},
 			loadFotorecipes() {
 				this.$store.dispatch('loadFotorecipes', {
 					parent_id: this.parent_id,
 					page: this.page - 1,
 					author_id: this.$store.getters.getUser.id,
-					diet: (this.diet) ? 1 : 0
+					diet: (this.diet) ? 1 : 0,
+          fav: (this.onlyFav) ? 1 : 0,
 				});
-			},
-			clickDiet() {
-				// фильтр по диет питанию
-				this.loadFotorecipes();
 			},
 			setShowRow(index) {
 				if (this.showRow.indexOf(index) === -1) {
@@ -176,8 +204,6 @@
           if (recipe.parent_id === id) return true;
           return false;
         }
-
-        //if (result.length > this.limit_foto_in_group) result.length = this.limit_foto_in_group;
         return result;
       }
 
@@ -272,7 +298,7 @@
   .blockGroup {
     border-top: 1px solid #42b983;
     margin-top: 25px;
-    margin-bottom: 10px;
+    padding-bottom: 20px;
     position: relative;
   }
   .blockGroup > span {

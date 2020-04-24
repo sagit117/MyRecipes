@@ -41,9 +41,10 @@
 		$parent_id = $_POST['parent_id'];
 		$page = intval($_POST['page']);
 		$diet = $_POST['diet'];
-		$limit = $_POST['limit'];
+    $limit = $_POST['limit'];
+    $fav = $_POST['fav'];
 
-    $res->dataFotoRecipes = getFotoRecipes($parent_id, $author_id, $page, $diet, $limit);
+    $res->dataFotoRecipes = getFotoRecipes($parent_id, $author_id, $page, $diet, $limit, $fav);
     $res->totalCountFotoRecipes = getTotalFotoRecipes($parent_id, $author_id, $diet);
 
 		echo json_encode($res);
