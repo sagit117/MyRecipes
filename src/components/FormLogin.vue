@@ -108,7 +108,7 @@
 		border-radius: 5px;
 		text-align: left;
 		z-index: 100;
-		padding: 25px;
+		padding: 20px;
 	}
 
 	.field {
@@ -124,7 +124,9 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		margin: 20px;
+		/*margin: 20px;*/
+    margin-top: 20px;
+    margin-bottom: 20px;
 	}
 
 	#btn {

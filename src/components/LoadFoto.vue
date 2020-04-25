@@ -131,6 +131,10 @@
     display: none;
   }
 
+  .btn {
+    padding-left: 0;
+  }
+
   .imgDiv {
     position: relative;
     width: 290px;

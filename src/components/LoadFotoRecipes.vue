@@ -135,11 +135,12 @@
   }
 
   .item {
-    float: left;
+    /*float: left;*/
     display: block;
     width: 100%;
     margin-top: 10px;
     position: relative;
+    margin-bottom: 10px;
   }
 
   .errorText {

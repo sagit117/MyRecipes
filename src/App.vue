@@ -20,6 +20,8 @@
     <UpScroll v-if="visibleUpScroll" />
     <BigFoto  v-if="this.$store.getters.getBigFotoData.show"/>
 
+    <Footer />
+
   </div>
 </template>
 
@@ -34,6 +36,7 @@
   import Alert from './components/Alert.vue'
   import UpScroll from './components/UpScroll.vue'
   import BigFoto from './components/BigFoto.vue'
+  import Footer from './components/Footer.vue'
   import lib from '@/lib/lib.js'
 
   export default {
@@ -45,6 +48,7 @@
       Alert,
       UpScroll,
       BigFoto,
+      Footer,
     },
 
     data() {
@@ -101,6 +105,7 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
+    min-height: 100vh;
   }
 
   #topPanel {

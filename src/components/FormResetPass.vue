@@ -81,13 +81,14 @@
 		border-radius: 5px;
 		text-align: left;
 		z-index: 100;
-		padding: 25px;
+		padding: 20px;
 	}
 
 	#field {
 		display: flex;
 		align-items: center;
 		margin-bottom: 10px;
+    flex-wrap: wrap;
 	}
 	#field>*:first-child {
 		width: 160px;
@@ -117,9 +118,9 @@
 		right: 20px;
 	}
 
-	#field {
+	/*#field {
 		flex-wrap: wrap;
-	}
+	}*/
 }
 
 </style>

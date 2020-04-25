@@ -13,22 +13,22 @@
         </div>
 
         <transition name="slide-fade">
-        <ul class="menuFilter" v-if="showFilterMenu">
-          <div class="close" title="Закрыть" @click="showFilterMenu = !showFilterMenu">
-            &#215;
-          </div>
-          <h3> Фильтры </h3>
+          <ul class="menuFilter" v-if="showFilterMenu">
+            <div class="close" title="Закрыть" @click="showFilterMenu = !showFilterMenu">
+              &#215;
+            </div>
+            <h5> Фильтры </h5>
 
-          <li>
-            <ShowCategory ref='listCategories' @change-group="changeGroup" :id_cat="parseInt(parent_id)" />
-          </li>
-          <li>
-            <label><input type="checkbox" v-model="diet" @change="loadFotorecipes">Только диетическое</label>
-          </li>
-          <li>
-            <label><input type="checkbox" v-model="onlyFav" @change="onlyFavVisible(false)">Только избранное</label>
-          </li>
-        </ul>
+            <li>
+              <ShowCategory ref='listCategories' @change-group="changeGroup" :id_cat="parseInt(parent_id)" />
+            </li>
+            <li>
+              <label><input type="checkbox" v-model="diet" @change="loadFotorecipes">Только диетическое</label>
+            </li>
+            <li>
+              <label><input type="checkbox" v-model="onlyFav" @change="onlyFavVisible(false)">Только избранное</label>
+            </li>
+          </ul>
         </transition>
 
 			</div>
@@ -128,6 +128,13 @@
 			this.loadFotorecipes();
       //this.typeShowList = (!lib.getCookie('typeShowList')) ? 2 : parseInt(lib.getCookie('typeShowList'));
       this.$store.dispatch('loadCategoriesRecipes', { parent_id: 0, author_id: this.$store.getters.getUser.id });
+    },
+
+    watch: {
+      typeShowList: function() {
+        // если не очищать, при переходе в строки они открыты
+        this.showRow = [];
+      }
     },
 
     computed: {
@@ -248,7 +255,7 @@
 		border-left: 5px solid #42b983;
 		margin: 4px;
 		min-height: 30px;
-		line-height: 30px;
+		/*line-height: 30px;*/
 		vertical-align: middle;
 	}
 	.itemRecipe > a {
