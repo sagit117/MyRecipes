@@ -359,6 +359,12 @@ export default new Vuex.Store({
       });
     },
     async loadFotorecipes(context, data) { // загрузить данные фоторецепта по фильтрам
+
+      if (this.state.user.id === 0) {
+        context.commit("setUserID", 0);
+        return;
+      }
+
       let formData = new FormData(data.form);
       formData.append('parent_id', data.parent_id);
       formData.append('limit', this.state.limit_foto_recipes);
@@ -374,7 +380,7 @@ export default new Vuex.Store({
         // Загружено
         context.commit("setShowWait", false);
         if (response.data.errorCode > 0) {
-          let alert = {show: true, caption: "Не удалось загрузить списки!", text: response.data.errorText, type: 1};
+          let alert = {show: true, caption: "Не удалось загрузить!", text: response.data.errorText, type: 1};
           context.commit('setShowAlert', alert);
           if (response.data.errorCode === 77) context.commit("setUserID", 0);
         } else {

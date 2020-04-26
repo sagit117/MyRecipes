@@ -87,10 +87,11 @@
 
     if ($str_parent !== '' AND ($str_diet !== '' OR $str_author !== '')) $str_parent .= " AND ";
     if ($author_id !== '' AND $str_diet !== '') $str_author .= " AND ";
+    $str_where = ($parent_id === 0 AND $author_id === 0 AND $diet === 0) ? "" : " WHERE ";
 
     $arrayRecipes = array();
 
-    $result = mysqli_query($link, "SELECT * FROM `foto_recipes` WHERE $str_parent $str_author $str_diet LIMIT $page, $limit");
+    $result = mysqli_query($link, "SELECT * FROM `foto_recipes` $str_where $str_parent $str_author $str_diet LIMIT $page, $limit");
     while ($recipes = mysqli_fetch_assoc($result)) {
       $data = new DataRecipes();
       $arrayImg = array();
@@ -237,8 +238,9 @@
 
     if ($str_parent !== '' AND ($str_diet !== '' OR $str_author !== '')) $str_parent .= " AND ";
     if ($author_id !== '' AND $str_diet !== '') $str_author .= " AND ";
+    $str_where = ($parent_id === 0 AND $author_id === 0 AND $diet === 0) ? "" : " WHERE ";
 
-    $result = mysqli_query($link, "SELECT count(*) FROM `foto_recipes` WHERE $str_parent $str_author $str_diet");
+    $result = mysqli_query($link, "SELECT count(*) FROM `foto_recipes` $str_where $str_parent $str_author $str_diet");
     return mysqli_fetch_row($result)[0];
   }
 
