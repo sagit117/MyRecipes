@@ -128,7 +128,7 @@
 	.pen > img {
 		width: 20px;
 		height: 26px;
-		float: left;
+		/*float: left;*/
 		padding: 2px;
 		object-fit: cover;
 	}
@@ -186,6 +186,8 @@
   }
   .menu > span {
     cursor: pointer;
+    color: rgb(145, 141, 141);
+    font-size: 12px;
   }
 
   .del {

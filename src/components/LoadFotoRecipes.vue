@@ -6,7 +6,7 @@
               :multiple="true"
               :showImg="true" />
     <div class="item">
-      <ShowCategory ref="listCategories" :showAddBtn="true" :id_cat="0" />
+      <ShowCategory ref="listCategories" :showAddBtn="true" :id_cat="0" :showAllGroup="false" />
     </div>
     <div class="item">
       <label>Название рецепта: </label>
@@ -78,8 +78,9 @@
         // сохранить рецепт
         this.minLengthName();
         if (this.images.length === 0) this.errorText = 'Необходимо загрузить миниммум одно фото!';
+        if (this.$refs.listCategories.$refs.listCategories.value == 0) this.errorText = "Нужно выбрать категорию!";
 
-        if (!this.isError && this.images.length !== 0) {
+        if (!this.isError && this.images.length !== 0 && this.$refs.listCategories.$refs.listCategories.value != 0) {
           this.block = true;
 
           let imgOrder = [];

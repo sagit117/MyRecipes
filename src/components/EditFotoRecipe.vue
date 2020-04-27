@@ -43,7 +43,11 @@
 			</div>
     </div>
 
-		<ShowCategory ref="listCategories" :showAddBtn="true" :id_cat="parseInt(recipe.parent_id)"/>
+		<ShowCategory 
+      ref="listCategories" 
+      :showAddBtn="true" 
+      :id_cat="parseInt(recipe.parent_id)" 
+      :showAllGroup="false" />
 
 		<div class="item">
 			<label>Название рецепта: </label>
@@ -91,7 +95,8 @@
 			return {
 				diet: (parseInt(this.recipe.diet) === 1) ? true: false,
 				nameRecipe: this.recipe.name,
-				isError: false,
+        isError: false,
+        isErrorCat: false,
 				errorText: '',
         path: this.$store.getters.getDomainName,
         newImg: [],
@@ -146,7 +151,13 @@
       save() {
         // сохранить
         this.minLength();
-        if (this.isError) return;
+
+        if (this.$refs.listCategories.$refs.listCategories.value == 0) {
+          this.isErrorCat = true;
+          this.errorText = "Нужно выбрать категорию!";
+        }
+
+        if (this.isError || this.isErrorCat) return;
         /*  
           собрать массив из изменненных фото и id от старых
           добавить в массив новый массив из новых фото с id 0
@@ -246,8 +257,8 @@
     cursor: pointer;
   }
   .edit > img {
-		width: 20px;
-		height: 20px;
+		width: 25px;
+		height: 25px;
 		float: left;
 		padding: 2px;
 		vertical-align: middle;

@@ -6,7 +6,8 @@
       <div class="option">
         <select ref="listCategories" 
           @change="()=>{ this.$emit('change-group', this.$refs.listCategories.value) }" >
-          <option value="0">Все</option>
+          <option value="0" v-if="showAllGroup">Все</option>
+          <option value="0" v-else>Нет группы</option>
           <option v-for="item in this.$store.getters.getCategoriesRecipe" 
             :key="item.id"
             :value="item.id"
@@ -43,6 +44,7 @@
     props: {
       showAddBtn: Boolean,
       id_cat: Number,
+      showAllGroup: Boolean,
     },
 
     data() {

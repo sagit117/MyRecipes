@@ -20,7 +20,11 @@
             <h5> Фильтры </h5>
 
             <li>
-              <ShowCategory ref='listCategories' @change-group="changeGroup" :id_cat="parseInt(parent_id)" />
+              <ShowCategory 
+                ref='listCategories' 
+                @change-group="changeGroup" 
+                :id_cat="parseInt(parent_id)" 
+                :showAllGroup="true" />
             </li>
             <li>
               <label><input type="checkbox" v-model="diet" @change="loadFotorecipes">Только диетическое</label>
@@ -60,6 +64,18 @@
               @delete="loadFotorecipes" />
           </div>
           <a href="#" title="показать все" @click.prevent="onlyFavVisible(true)">показать все</a>
+        </div>
+
+        <div class="blockGroup" v-if="vilterFotoRecipesNoGroup().length !== 0"> <!--не должно использоваться-->
+          <span>Без категории</span>
+          <div class="group">
+            <ItemFotoRecipe 
+              v-for="recipe in vilterFotoRecipesNoGroup()" 
+              :key="recipe.id" 
+              :recipe="recipe" 
+              @edit="edit(recipe)" 
+              @delete="loadFotorecipes" />
+          </div>
         </div>
 
         <template v-for="group in this.$store.getters.getCategoriesRecipe">
@@ -119,7 +135,7 @@
         edit_recipe: {},
         showFilterMenu: false,
         parent_id: 0,
-        limit_foto_in_group: 20,
+        limit_foto_in_group: 20, // лимит рецептов для отображения в группах
         onlyFav: false,
 			}
 		},
@@ -148,6 +164,11 @@
         function filterRec(recipe) {
           return recipe.fav;
         }
+
+        if (result.length > this.limit_foto_in_group) {
+          result.length = this.limit_foto_in_group;
+        }
+
         return result;
       },
     },
@@ -172,7 +193,7 @@
           this.typeShowList = 2;
         }
         this.loadFotorecipes();
-			},
+      },
 			loadFotorecipes() {
 				this.$store.dispatch('loadFotorecipes', {
 					parent_id: this.parent_id,
@@ -211,6 +232,28 @@
           if (recipe.parent_id === id) return true;
           return false;
         }
+
+        if (result.length > this.limit_foto_in_group) {
+          result.length = this.limit_foto_in_group;
+        }
+        
+        return result;
+      },
+      vilterFotoRecipesNoGroup() {
+        const listFR = this.$store.getters.getDataFotoRecipes;
+        if (typeof(listFR) === 'string') return [];
+
+        const result = listFR.filter(filterRec);
+
+        function filterRec(recipe) {
+          if (recipe.parent_id == 0) return true;
+          return false;
+        }
+
+        if (result.length > this.limit_foto_in_group) {
+          result.length = this.limit_foto_in_group;
+        }
+
         return result;
       }
 
