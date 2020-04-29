@@ -6,12 +6,14 @@
   /* sagit117@gmail.com */
 
   require 'connect.php';
+  require_once 'user.php';
 
   class Categories {
     public $id = 0;
     public $parent_id = 0;
     public $name = '';
     public $author_id = 0;
+    public $user_rule = 0;
   }
 
   function getCategories($parent_id, $author_id) { // получить категории
@@ -45,6 +47,25 @@
     mysqli_query($link, "INSERT INTO `categories_recipes`(`parent_id`, `name`, `author_id`) 
                               VALUES ('$parent_id', '$name', '$author_id')") or die(0);
     return mysqli_insert_id($link);
+  }
+
+  function getCategoriesUserGroup() { // получить категорию по роли пользователя
+    global $link;
+    $arr = array();
+    
+    $result = mysqli_query($link, "SELECT * FROM `categories_recipes`");
+    while ($cat = mysqli_fetch_assoc($result)) {
+    	$categori = new Categories();
+    	$categori->id = $cat['id'];
+    	$categori->parent_id = $cat['parent_id'];
+    	$categori->name = $cat['name'];
+      $categori->author_id = $cat['author_id'];
+      $categori->user_rule = getUser('id', $categori->author_id)[0]->rule;
+
+    	array_push($arr, $categori);
+    }
+
+    return $arr;
   }
 
 ?>

@@ -29,6 +29,7 @@ export default new Vuex.Store({
     },
     // категории рецептов
     categoriesRecipes: '',                      // JSON категории рецептов по родителю, автору
+    //categoriesUserGroup: '',                    // JSON категории рецептов всех где роль пользователя user и выше
     // фото рецепты
     fotoRecipes: '',                            // JSON фото рецептов по страницам, авторам и родителю
     limit_foto_recipes: 30,                     // лимит вывода на страницу 
@@ -99,6 +100,9 @@ export default new Vuex.Store({
     setTotalCountFotoRecipes(state, data) { // установить количество рецептов для подсчета числа страниц
       state.total_count_foto_recipes = data;
     },
+    /*setCategoriesUserGroup(state, data) { // установить категорию рецептов для всех для роли user
+      state.categoriesUserGroup = data;
+    }*/
   },
 
   actions: {
@@ -582,7 +586,52 @@ export default new Vuex.Store({
           reject();
         });
       });
-    }
+    },
+    /*async loadCategoriesUserGroup(context) { // загрузить группы всех пользователей с ролью user и выше
+      context.commit("setShowWait", true);
+
+      axios.get(this.state.domainName + 'api/getCategoriesUserGroup.php')
+      .then(function (response) {
+        // успешно
+        context.commit("setShowWait", false);
+        context.commit('setCategoriesUserGroup', response.data);
+
+        let formData = new FormData();
+        let arrName = [];
+
+        response.data.forEach(element => {
+          if (element.user_rule === "user" || element.user_rule === "extra_user") arrName.push(element.id);
+        });
+
+        formData.append('id_group', JSON.stringify(arrName));
+        
+        context.dispatch("getFotoRecipesUserRule", formData);
+      })
+      .catch(function (error) {
+        // Проблемы на линии
+        console.log(error);
+        let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
+        context.commit('setShowAlert', alert);
+        context.commit("setShowWait", false);
+      });
+    },
+    async getFotoRecipesUserRule(context, data) { // получить список рецептов по всем пользователям с ролями user и выше
+      context.commit("setShowWait", true);
+      
+      axios.post(this.state.domainName + 'api/getFotoRecipesUserRule.php', data)
+      .then((response) => {
+        context.commit("setShowWait", false);
+        context.commit("setDataFotoRecipes", response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        // Проблемы на линии
+        console.log(error);
+        let alert = {show: true, caption: "Проблемы на линии!", text: error, type: 1};
+        context.commit('setShowAlert', alert);
+        context.commit("setShowWait", false);
+      })
+    },*/
   },
 
   getters: {
@@ -612,7 +661,10 @@ export default new Vuex.Store({
     },
     getTotalFotoRecipes: state => {
       return state.total_count_foto_recipes;
-    }
+    },
+    /*getCategoriesUserGroup: state => {
+      return state.categoriesUserGroup;
+    }*/
   },
 
 

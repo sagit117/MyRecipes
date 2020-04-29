@@ -17,7 +17,7 @@
             <div class="close" title="Закрыть" @click="showFilterMenu = !showFilterMenu">
               &#215;
             </div>
-            <h5> Фильтры </h5>
+            <h5 class="mt-1"> Фильтры </h5>
 
             <li>
               <ShowCategory 
@@ -142,7 +142,6 @@
 
 		created() {
 			this.loadFotorecipes();
-      //this.typeShowList = (!lib.getCookie('typeShowList')) ? 2 : parseInt(lib.getCookie('typeShowList'));
       this.$store.dispatch('loadCategoriesRecipes', { parent_id: 0, author_id: this.$store.getters.getUser.id });
     },
 
@@ -318,6 +317,8 @@
     z-index: 99;
     text-align: left;
     box-shadow: 2px 2px 4px #000;
+    max-width: 100%;
+    overflow-x: auto;
   }
   .menuFilter > li {
     border-bottom: 1px solid #eaeaea;

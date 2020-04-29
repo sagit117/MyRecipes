@@ -8,7 +8,7 @@
           @change="()=>{ this.$emit('change-group', this.$refs.listCategories.value) }" >
           <option value="0" v-if="showAllGroup">Все</option>
           <option value="0" v-else>Нет группы</option>
-          <option v-for="item in this.$store.getters.getCategoriesRecipe" 
+          <option v-for="item in group" 
             :key="item.id"
             :value="item.id"
             :selected="parseInt(item.id) === valueSel"
@@ -45,6 +45,7 @@
       showAddBtn: Boolean,
       id_cat: Number,
       showAllGroup: Boolean,
+      showUserGroup: Boolean,
     },
 
     data() {
@@ -57,7 +58,44 @@
     },
 
     mounted() {
-      this.$store.dispatch('loadCategoriesRecipes', { parent_id: 0, author_id: this.$store.getters.getUser.id });
+      if (this.showUserGroup === true) {
+        this.$store.dispatch('loadCategoriesUserGroup');
+      } else {
+        this.$store.dispatch('loadCategoriesRecipes', { parent_id: 0, author_id: this.$store.getters.getUser.id });
+      }
+    },
+
+    computed: {
+      group: function() {
+        let arr = [], res = [];
+        if (this.showUserGroup === true) {
+          arr = this.$store.getters.getCategoriesUserGroup;
+          if (!arr) return [];
+          
+          res = arr.filter(filterRule);
+          let result = [];
+
+          for (let i=0; i<res.length; i++) {
+            let findName = result.filter((item) => {
+              if (item.name === res[i].name) return true;
+              return false;
+            })
+
+            if (findName.length === 0) result.push(res[i]);
+          }
+
+          return result;
+        } else {
+          arr = this.$store.getters.getCategoriesRecipe;
+        }
+
+        function filterRule(item) {
+          if (item.user_rule === "user" || item.user_rule === "extra_user") return true;
+          return false;
+        }
+
+        return arr;
+      },
     },
 
     methods: {
@@ -75,7 +113,7 @@
           });
         } 
       },
-
+      
     },
 
   }
